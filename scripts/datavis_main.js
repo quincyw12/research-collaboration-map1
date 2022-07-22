@@ -1,7 +1,7 @@
-	// JavaScript source code
+// JavaScript source code
 
 // Initialize the map.
-var homeCoords = [52.476089, -190.825867];
+var homeCoords = [52.476089, -50.825867];
 
 var bingKey = "AvEQ1m7_88IHqh6gFAaKUTUuuqbz_zrvMU7HEEu_vX6qXguJOWIQk4WqS-01xSAq";
 var txtFile = new XMLHttpRequest();
@@ -34,10 +34,22 @@ var maxZoomV = 18;
 var map = L.map('map', {
 	minZoom: minZoomV,
 	maxZoom: maxZoomV,
-	zoomSnap: 3
-}).setView(homeCoords, 6);
+	zoomSnap: 1,
+    maxBoundsViscosity: 1.0
+}).setView(homeCoords, minZoomV*2);
+// map.fitBounds(L.latLngBounds(northEastBounds, southWestBounds));
+//map.fitBounds(bounds);
+map.setZoom(minZoomV);
 
-map.setZoom(4);
+var southWest = L.latLng(-89.98155760646617, -180),
+northEast = L.latLng(89.99346179538875, 180);
+var bounds = L.latLngBounds(southWest, northEast);
+
+map.setMaxBounds(bounds);
+map.on('drag', function() {
+    map.panInsideBounds(bounds, { animate: false });
+});
+
 var mapSize = document.getElementById("map");
 
 
@@ -50,7 +62,7 @@ function adjustWin() {
 	var maxV = (18500 / (maxZoomV / minZoomV)) - 50
 	for (var a = 0; a < markers.length; a++) {
 
-		if (zoomLevel <= 5) {
+		if (zoomLevel <= 8) {
 			maxV = (198500 / (maxZoomV / minZoomV)) - 50;
 			markers[a]['_mRadius'] = (198500 / (zoomLevel / minZoomV)) - maxV;
 		}
@@ -78,7 +90,7 @@ var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 */
 
-var tiles = L.tileLayer(lightStyle, {}).addTo(map);
+var tiles = L.tileLayer(defaultStyle, {}).addTo(map);
 map.attributionControl.addAttribution("<a href=\"https://www.jawg.io\" target=\"_blank\">&copy; Jawg</a> - <a href=\"https://www.openstreetmap.org\" target=\"_blank\">&copy; OpenStreetMap</a>&nbsp;contributors")
 
 txtFile.open("GET", "https://kennyzhang620.github.io/vis_data.csv", false);
@@ -204,13 +216,13 @@ function loadLeftPanel(i) {
                                                 <div class="research_details">${Collabs}</div>
                                             </div>
 
-											FUNDER AND TIME PERIOD
+											
                                             <div id="fund_section" style="text-align:center;">
                                                 <div id="funder_main" style="padding:2px; display:inline-block; width:43%;">
-                                                    <div class="research_details" style="height:20px;">${Funder}</div>
+                                                    <div class="research_details">${Funder}</div>
                                                 </div>
                                                 <div id="funder_period" style="padding: 2px;display:inline-block; width: 43%;">
-                                                    <div class="research_details" style="height:20px;">${TimePeriod}</div>
+                                                    <div class="research_details">${TimePeriod}</div>
                                                 </div>
                                             </div>
                                             KEYWORDS
@@ -220,7 +232,7 @@ function loadLeftPanel(i) {
 
 											RESEARCH SITES
                                             <div id="poi_site" style="padding: 3px; display: block;">
-                                                <div class="research_details" style="height: 20px;">${site}</div>
+                                                <div class="research_details">${site}</div>
                                             </div>
 													`
 
@@ -269,9 +281,10 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 		if (Project.includes(projectName) && site.includes(researchNames) && PIs.includes(piNames) && CoPIs.includes(copiNames) && Collabs.includes(collabNames) &&
 			Funder.includes(funderName) && TimePeriod.includes(timePeriod) && keywords.includes(keywordList)) {
 			const markerI = (L.circle([parsedD[i].latitude, parsedD[i].longitude], {
-				color: 'red',
-				fillColor: '#f03',
-				fillOpacity: 0.25,
+				// color: 'blue',
+				color: 'transparent',
+				fillColor: '#FA255E', //'#f03',
+				fillOpacity: 0.50,
 				radius: 50
 			}).addTo(map));
 
@@ -282,15 +295,15 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 											FUNDER AND TIME PERIOD
                                             <div id="fund_section" style="text-align:center;">
                                                 <div id="funder_main" style="padding:2px; display:inline-block; width:43%;">
-                                                    <div class="research_details" style="height:20px;">${Funder}</div>
+                                                    <div class="research_details">${Funder}</div>
                                                 </div>
                                                 <div id="funder_period" style="padding: 2px;display:inline-block; width: 43%;">
-                                                    <div class="research_details" style="height:20px;">${TimePeriod}</div>
+                                                    <div class="research_details">${TimePeriod}</div>
                                                 </div>
                                             </div>
 											RESEARCH SITES
                                             <div id="poi_site" style="padding: 3px; display: block;">
-                                                <div class="research_details" style="height: 20px;">${site}</div>
+                                                <div class="research_details">${site}</div>
                                             </div>
 											<div id="options" style="text-align:left;">
 												<div id="more_options" style="padding:2px; width:40%;display:inline-block;">
@@ -313,7 +326,7 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 				if (map['_zoom'] <= 12) {
 					console.log(e);
 					map.setView(e.latlng, 18);
-					map.setZoom(16);
+					map.setZoom(10);
 				}
 			});
 
@@ -390,9 +403,10 @@ homebutton.addEventListener('mousedown', function (clicked) {
 });
 
 homebutton.addEventListener('click', function (clicked) {
-	map.setView(homeCoords, 1);
-	map.setZoom(3);
-	adjustWin();
+	map.setZoom(minZoomV);
+	map.setView(homeCoords, minZoomV);
+	
+    adjustWin();
 });
 
 homebutton.addEventListener('mouseup', function (clicked) {
