@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet"
+          href="stylesheets/styles.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+          integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+          crossorigin="" />
+
+    <link rel="stylesheet" href="stylesheets/additional_styles.css" />
+
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+            integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+            crossorigin=""></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.js" integrity="sha256-fNXJFIlca05BIO2Y5zh1xrShK3ME+/lYZ0j+ChxX2DA=" crossorigin="anonymous"></script>
+    <script src="scripts/jquery.csv.js"></script>
+
+    <title>Data and Research Visualization Map</title>
+
+</head>
+<body>
+    <section class="main_view">
+
+        <div class="Filters_Pane" id="filters_norm">
+            <div class="f_header">
+                Filter Options
+
+                <input type="text" class="filter_input" id="filter_search" placeholder="Project Name" style="width:93%;padding:5px;text-align:left;" />
+                <input type="text" class="filter_input" id="filter_site" placeholder="Research Sites" style="width: 93%; padding: 5px; text-align: left;" />
+                <div class="pi_section">
+                    <input type="text" class="filter_input" id="filter_pi_main" placeholder="PI" style="width: 50%; padding: 5px; text-align: left;" />
+                    <input type="text" class="filter_input" id="filter_pi_sub" placeholder="Co-PIs" style="width: 38%; padding: 5px; text-align: left;" />
+                </div>
+                <input type="text" class="filter_input" id="filter_colabs" placeholder="Collaborators" style="width: 93%; padding: 5px; text-align: left;" />
+                <div class="fund_section">
+                    <input type="text" class="filter_input" id="filter_fun_main" placeholder="Funder" style="width: 50%; padding: 5px; text-align: left;" />
+                    <input type="text" class="filter_input" id="filter_fun_time" placeholder="Period" style="width: 38%; padding: 5px; text-align: left;" />
+                </div>
+                <input type="text" class="filter_input" id="filter_keywords" placeholder="Keywords" style="width: 93%; padding: 5px; text-align: left;" />
+            </div>
+        </div>
+
+        <section class="Map_interface">
+            <div class="searchfeatures">
+                <input type="text" id="search" class="search" placeholder="Enter a location to go to..." />
+            </div>
+
+            <section class="map_container">
+
+                <div class="map_container" id="items_main">
+                    <div class="Filters_Pane" id="items_main2">
+                        <div class="f_header">
+                            <div class="main_header" style="text-align:center;">
+                                <name>Research Facility</name>
+                            </div>
+
+                            <section class="data_header" id = "data_header" >
+
+                                <header id="rname" style="font-size:large; text-align:center;">Storied lives: An impact study of COVID-19 on seniors and their community support services</header>
+                                <div id="pi_section" style="text-align:center;">
+                                    <div id="PI_field" style="padding:3px;">
+                                        <div class="research_details">Alf Coles (University of Bristol) and Kate Le Roux (University of Cape Town, SA)</div>
+                                    </div>
+                                    <div id="Co_PI_field" style="padding:3px;">
+                                        <div class="research_details">Nathalie Sinclair, Elizabeth de Freitas, Armando Solares, Oi-Lam Ng, Sally Wai-yan Wan, Tracy Hellwell, Julian Brown, Mark Boylan, Elaine Simmt, Stephanie La France</div>
+                                    </div>
+                                </div>
+
+                                <div id="collab_field" style="padding:3px;">
+                                    <div class="research_details">Sandy Banks (SFU)</div>
+                                </div>
+
+                                <div id="fund_section" style="text-align:center;">
+                                    <div id="funder_main" style="padding:2px; display:inline-block; width:43%;">
+                                        <div class="research_details">Funder</div>
+                                    </div>
+                                    <div id="funder_period" style="padding: 2px;display:inline-block; width: 43%;">
+                                        <div class="research_details">Period</div>
+                                    </div>
+                                </div>
+
+                                <div id="poi_keywords" style="padding: 3px; display: block;">
+                                    <div class="research_details">Keywords</div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map" id="map">
+                    <input type="image" src="icons/Settings.png" id="settingsbtn">
+                    <section id="options_meta" style="width:100%; border:2px dotted grey; display:block; z-index:1000;">
+
+                        <div class="map_container" id="filters_pc">
+                            <div class="Filters_Pane">
+                                <div class="f_header">
+                                    Filter Options
+
+                                    <input type="text" class="filter_input" id="filter_search" placeholder="Project Name" style="width:93%;padding:5px;text-align:left;" />
+                                    <input type="text" class="filter_input" id="filter_site" placeholder="Research Sites" style="width: 93%; padding: 5px; text-align: left;" />
+                                    <div class="pi_section">
+                                        <input type="text" class="filter_input" id="filter_pi_main" placeholder="PI" style="width: 50%; padding: 5px; text-align: left;" />
+                                        <input type="text" class="filter_input" id="filter_pi_sub" placeholder="Co-PIs" style="width: 38%; padding: 5px; text-align: left;" />
+                                    </div>
+                                    <input type="text" class="filter_input" id="filter_colabs" placeholder="Collaborators" style="width: 93%; padding: 5px; text-align: left;" />
+                                    <div class="fund_section">
+                                        <input type="text" class="filter_input" id="filter_fun_main" placeholder="Funder" style="width: 50%; padding: 5px; text-align: left;" />
+                                        <input type="text" class="filter_input" id="filter_fun_time" placeholder="Period" style="width: 38%; padding: 5px; text-align: left;" />
+                                    </div>
+                                    <input type="text"  class="filter_input" id="filter_keywords" placeholder="Keywords" style="width: 93%; padding: 5px; text-align: left;" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+                <input type="image" src="icons/HomeIcon.png" id="homebtn">
+            </section>
+
+
+            
+
+        </section>
+
+    </section>
+
+
+
+    <script src="scripts/datavis_main.js"></script>
+</body>
+
+</html>

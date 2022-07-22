@@ -1,0 +1,10 @@
+If select certain year, certain year wil should up
+
+Data retrieve: .json -> parse -> process
+Filter using js code
+
+Zoomable global map (Leaflet, 3JS)
+
+
+
+Select which department,professor,year of funding,
