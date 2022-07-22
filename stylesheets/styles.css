@@ -90,11 +90,11 @@ body {
 }
 
 .research_details {
-    border: 2px solid grey;
+    border: 0px solid grey;
     overflow: scroll;
     padding: 5px;
     text-align: center;
-    font-size: 15px;
+    font-size: 12px;
     height: 40px;
     border-radius: 8px;
 }
@@ -199,7 +199,6 @@ body {
     float: right;
     z-index: 10000;
 }
-
 
 #settingsbtn {
     width: 60px;
