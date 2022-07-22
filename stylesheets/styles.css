@@ -200,7 +200,6 @@ body {
     z-index: 10000;
 }
 
-
 #settingsbtn {
     width: 60px;
     height: 60px;
@@ -218,6 +217,6 @@ body {
 }
 
 .map {
-    height: 90h;
+    height: 90vh;
     z-index: 0;
 }
