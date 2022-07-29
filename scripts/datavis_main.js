@@ -7,10 +7,10 @@ var bingKey = "AvEQ1m7_88IHqh6gFAaKUTUuuqbz_zrvMU7HEEu_vX6qXguJOWIQk4WqS-01xSAq"
 var txtFile = new XMLHttpRequest();
 var parsedD = {};
 var markers = [];
-var searchbar = document.getElementById("search");
+//var searchbar = document.getElementById("search");
 var homebutton = document.getElementById("homebtn");
 var settingsBtn = document.getElementById("settingsbtn")
-var settingsPne = document.getElementById("settingspane");
+// var settingsPne = document.getElementById("settingspane");
 var filtersBtn = settingsBtn;
 var filtersPne = document.getElementById("filters_norm");
 var filtersPC = document.getElementById("filters_pc");
@@ -37,8 +37,7 @@ var map = L.map('map', {
 	zoomSnap: 1,
     maxBoundsViscosity: 1.0
 }).setView(homeCoords, minZoomV*2);
-// map.fitBounds(L.latLngBounds(northEastBounds, southWestBounds));
-//map.fitBounds(bounds);
+
 map.setZoom(minZoomV);
 
 var southWest = L.latLng(-89.98155760646617, -180),
@@ -53,6 +52,42 @@ map.on('drag', function() {
 var mapSize = document.getElementById("map");
 
 
+function adjustWin0() {
+
+	const zoomLevel = map['_zoom'];
+	const zoom_logo_mapping = {};
+    zoom_logo_mapping[3] = 16500;
+	zoom_logo_mapping[4] = 11500;
+    zoom_logo_mapping[5] = 86000;
+	zoom_logo_mapping[6] = 66200;
+	zoom_logo_mapping[7] = 52000;
+	zoom_logo_mapping[8] = 41400;
+    zoom_logo_mapping[9] = 30000;
+	zoom_logo_mapping[10] = 20000;
+    zoom_logo_mapping[11] = 10000;
+	zoom_logo_mapping[12] = 9000;
+	zoom_logo_mapping[13] = 8000;
+	zoom_logo_mapping[14] = 7000;
+	zoom_logo_mapping[15] = 6000;
+	zoom_logo_mapping[16] = 5000;
+	zoom_logo_mapping[17] = 4000;
+	zoom_logo_mapping[18] = 3000;
+	console.log("adjustWin ZOOM: ", zoomLevel);
+
+	var maxV = (18500 / (maxZoomV / minZoomV)) - 50
+	console.log("adjustWin marker length: ", markers.length);
+	for (var a = 0; a < markers.length; a++) {
+		
+
+		markers[a]['_mRadius'] = zoom_logo_mapping[zoomLevel];
+
+		console.log(markers[a]['_mRadius']);
+	}
+	
+	map.invalidateSize(true);
+
+}
+
 function adjustWin() {
 
 	const zoomLevel = map['_zoom'];
@@ -62,22 +97,24 @@ function adjustWin() {
 	var maxV = (18500 / (maxZoomV / minZoomV)) - 50
 	for (var a = 0; a < markers.length; a++) {
 
-		if (zoomLevel <= 8) {
+		if (zoomLevel > 6 && zoomLevel <= 8) {
 			maxV = (198500 / (maxZoomV / minZoomV)) - 50;
-			markers[a]['_mRadius'] = (198500 / (zoomLevel / minZoomV)) - maxV;
+			markers[a]['_mRadius'] = 40000; // (198500 / (zoomLevel / minZoomV)) - maxV;
 		}
-		else if (zoomLevel <= 10) {
-			maxV = (7500 / (maxZoomV / minZoomV)) - 50;
-			markers[a]['_mRadius'] = (7500 / (zoomLevel / minZoomV)) - maxV;
+		else if (zoomLevel > 8 && zoomLevel <= 10) {
+			maxV = (75000 / (maxZoomV / minZoomV)) - 50;
+			markers[a]['_mRadius'] = 2000; // (75000 / (zoomLevel / minZoomV)) - maxV;
 		}
-		else if (zoomLevel <= 12) {
-			maxV = (1500 / (maxZoomV / minZoomV)) - 50;
-			markers[a]['_mRadius'] = (1500 / (zoomLevel / minZoomV)) - maxV;
+		else if (zoomLevel > 10 && zoomLevel <= 12) {
+			maxV = (15000 / (maxZoomV / minZoomV)) - 50;
+			markers[a]['_mRadius'] = 1000; // (15000 / (zoomLevel / minZoomV)) - maxV;
 		}
-		else
-			markers[a]['_mRadius'] = 50;
+		else if (zoomLevel > 12) {
+			markers[a]['_mRadius'] = 500;
+		}
 
 		console.log(markers[a]['_mRadius']);
+		
 	}
 	
 	map.invalidateSize(true);
@@ -280,12 +317,12 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 
 		if (Project.includes(projectName) && site.includes(researchNames) && PIs.includes(piNames) && CoPIs.includes(copiNames) && Collabs.includes(collabNames) &&
 			Funder.includes(funderName) && TimePeriod.includes(timePeriod) && keywords.includes(keywordList)) {
-			const markerI = (L.circle([parsedD[i].latitude, parsedD[i].longitude], {
+			const markerI = (L.circleMarker([parsedD[i].latitude, parsedD[i].longitude], {
 				// color: 'blue',
 				color: 'transparent',
-				fillColor: '#FA255E', //'#f03',
+				fillColor: '#660099', //'#FA255E', //'#f03',
 				fillOpacity: 0.50,
-				radius: 50
+				radius: 8
 			}).addTo(map));
 
 			var metadata = `
@@ -323,11 +360,20 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 
 			markerI.bindPopup(metadata);
 			markerI.on('click', function (e) {
-				if (map['_zoom'] <= 12) {
+				if (map['_zoom'] <= 10) {
 					console.log(e);
-					map.setView(e.latlng, 18);
+					map.setView(e.latlng, 10);
 					map.setZoom(10);
 				}
+				// close filter popup
+				filtersPC.style.display = "none";
+				filtersPne.style.display = "none";
+		
+				FiltersActive = false;
+			}).on('popupclose', function (e) {
+				map.setZoom(minZoomV);
+				map.setView(homeCoords, minZoomV);
+				console.log("popupclose");
 			});
 
 			markers.push(markerI);
@@ -349,7 +395,8 @@ function closeRightPane() {
 		infoPanel.style.display = "none";
 		
 	}
-	adjustWin();
+	console.log("close Right Pane");
+	//adjustWin();
 }
 
 
@@ -375,7 +422,8 @@ function searchLocalDB(query) {
 	return null;
 }
 //console.log(parsedD[0].latitude, parsedD[1].longitude);
-search.addEventListener('keypress', function (keyin) {
+/*
+searchbar.addEventListener('keypress', function (keyin) {
 
 	var coords = null;
 	if (keyin.key === 'Enter') {
@@ -397,6 +445,7 @@ search.addEventListener('keypress', function (keyin) {
 		}
 	}
 });
+*/
 
 homebutton.addEventListener('mousedown', function (clicked) {
 	homebutton.style.transform = "scale(0.75,0.75)";
@@ -405,8 +454,8 @@ homebutton.addEventListener('mousedown', function (clicked) {
 homebutton.addEventListener('click', function (clicked) {
 	map.setZoom(minZoomV);
 	map.setView(homeCoords, minZoomV);
-	
-    adjustWin();
+	console.log("click");
+    //adjustWin();
 });
 
 homebutton.addEventListener('mouseup', function (clicked) {
@@ -422,7 +471,8 @@ settingsBtn.addEventListener('mouseup', function (clicked) {
 });
 
 
-map.on('movestart', closeRightPane)
+map.on('moveend', closeRightPane)
+map.on('zoomend', closeRightPane)
 
 window.addEventListener('resize', function (meta) {
 	if (FiltersActive) {
@@ -459,7 +509,8 @@ filtersBtn.addEventListener('click', function (clicked) {
 
 		FiltersActive = false;
 	}
-	adjustWin();
+	console.log("console click");
+	//adjustWin();
 });
 
 function coordsToStr(coords) {
@@ -478,12 +529,14 @@ function failure() {
 
 console.log(window.innerHeight*0.75);
 
-adjustWin();
+console.log("main");
+//adjustWin();
 
 //navigate(redirectGMapNav, coordsToStr(homeCoords), 'Port Coquitlam')
 
 window.addEventListener('resize', function (event) {
-	adjustWin();
+	console.log("resizing");
+	//adjustWin();
 }, true);
 
 
