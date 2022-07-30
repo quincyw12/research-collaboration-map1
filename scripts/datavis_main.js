@@ -154,7 +154,7 @@ console.log("IXXX: ", inputBars);
 for (var i = 0; i < inputBars.length; i++) {
 	console.log("aaa_>", i, inputBars[i].placeholder, "  ", inputBars[i].value);
 
-	inputBars[i].addEventListener('keypress', function (keyin) {
+	inputBars[i].addEventListener('keydown', function (keyin) {
 
 		// Inefficient code ahead!
 
@@ -173,10 +173,13 @@ for (var i = 0; i < inputBars.length; i++) {
 			}
 		}
 
-
+        console.log("DXXXX: ", inputBars[2]);
 		filter(inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
 
 	});
+
+ 
+
 }
 
 function GeoCode(query) {
@@ -294,7 +297,7 @@ function displayInfo() {
 }
 function filter(projectName, researchNames, piNames, copiNames, collabNames, funderName, timePeriod, keywordList) {
 
-	console.log("checkerL -> ", projectName, researchNames, piNames, collabNames, funderName, timePeriod, keywordList);
+	console.log("checkerL -> ", parsedD.length, projectName, researchNames, piNames, collabNames, funderName, timePeriod, keywordList);
 	for (var x = 0; x < markers.length; x++) {
 		map.removeLayer(markers[x]);
 	}
@@ -315,8 +318,15 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 		var coordsLat = parsedD[i].latitude;
 		var coordsLong = parsedD[i].longitude;
 
-		if (Project.includes(projectName) && site.includes(researchNames) && PIs.includes(piNames) && CoPIs.includes(copiNames) && Collabs.includes(collabNames) &&
-			Funder.includes(funderName) && TimePeriod.includes(timePeriod) && keywords.includes(keywordList)) {
+		if (Project.toLowerCase().includes(projectName.toLowerCase()) && 
+		    site.toLowerCase().includes(researchNames.toLowerCase()) && 
+			PIs.toLowerCase().includes(piNames.toLowerCase()) && 
+			CoPIs.toLowerCase().includes(copiNames.toLowerCase()) && 
+			Collabs.toLowerCase().includes(collabNames.toLowerCase()) &&
+			Funder.toLowerCase().includes(funderName.toLowerCase()) && 
+			TimePeriod.toLowerCase().includes(timePeriod.toLowerCase()) && 
+			keywords.toLowerCase().includes(keywordList.toLowerCase())) 
+		{
 			const markerI = (L.circleMarker([parsedD[i].latitude, parsedD[i].longitude], {
 				// color: 'blue',
 				color: 'transparent',
@@ -327,29 +337,30 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 
 			var metadata = `
 
-								<header id="rname" style="font-size:large; text-align:center; font-weight:800;">${Project}</header>
-									<section id="Full_section">
-											FUNDER AND TIME PERIOD
-                                            <div id="fund_section" style="text-align:center;">
-                                                <div id="funder_main" style="padding:2px; display:inline-block; width:43%;">
+								<header id="rname" style="font-size:medium; text-align:left; font-weight:800;">${Project}</header>
+									<section id="Full_section" style="margin-top:10px">
+											<strong>Funder and Year</strong>
+                                            <div id="fund_section" style="text-align:left;">
+                                                
                                                     <div class="research_details">${Funder}</div>
-                                                </div>
-                                                <div id="funder_period" style="padding: 2px;display:inline-block; width: 43%;">
+                                                
+                                              
                                                     <div class="research_details">${TimePeriod}</div>
-                                                </div>
+                                               
                                             </div>
-											RESEARCH SITES
-                                            <div id="poi_site" style="padding: 3px; display: block;">
+
+											<strong>Research Site</strong>
+                                            <div id="poi_site" style="display: block;">
                                                 <div class="research_details">${site}</div>
                                             </div>
-											<div id="options" style="text-align:left;">
+											<!-- <div id="options" style="text-align:left;">
 												<div id="more_options" style="padding:2px; width:40%;display:inline-block;">
 													<div class="rounded_button" onclick="loadLeftPanel(${i})">More</div>
 												</div>
 												<div id="navigate" style="padding:2px; width:55%;display:inline-block;">
 													<div class="rounded_button" onclick="navigate(redirectGMapNav, coordsToStr(homeCoords), coordsToStr( [${parseFloat(parsedD[i].latitude)}, ${parseFloat(parsedD[i].longitude)}] ))">Navigate to Site</div>
 												</div>
-											</div>
+											</div> -->
 									</section>
 
 
@@ -491,6 +502,7 @@ window.addEventListener('resize', function (meta) {
 filtersBtn.addEventListener('click', function (clicked) {
 
 	console.log(FiltersActive);
+	filter("","","","","","","","");
 	if (!FiltersActive) {
 		if (window.innerWidth / window.innerHeight >= (4 / 3)) {
 			filtersPC.style.display = "block";
