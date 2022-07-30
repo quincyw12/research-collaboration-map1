@@ -343,12 +343,19 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
                                             <div id="fund_section" style="text-align:left;">
                                                 
                                                     <div class="research_details">${Funder}</div>
-                                                
+                                                    
                                               
                                                     <div class="research_details">${TimePeriod}</div>
                                                
                                             </div>
-
+											<strong>PI and Co-PIs</strong>
+											<div id="pi_section" style="text-align:left;">
+                                                
+                                                    <div class="research_details" style="padding-bottom:3px">${PIs}</div>
+                                                    
+                                                    <div class="research_details">${CoPIs}</div>
+                                               
+                                            </div>
 											<strong>Research Site</strong>
                                             <div id="poi_site" style="display: block;">
                                                 <div class="research_details">${site}</div>
