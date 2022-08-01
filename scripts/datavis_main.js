@@ -35,8 +35,12 @@ var map = L.map('map', {
 	minZoom: minZoomV,
 	maxZoom: maxZoomV,
 	zoomSnap: 1,
-    maxBoundsViscosity: 1.0
+    maxBoundsViscosity: 1.0,
+	zoomControl: false
 }).setView(homeCoords, minZoomV*2);
+L.control.zoom({
+    position: 'bottomright'
+}).addTo(map);
 
 map.setZoom(minZoomV);
 
@@ -50,7 +54,6 @@ map.on('drag', function() {
 });
 
 var mapSize = document.getElementById("map");
-
 
 function adjustWin0() {
 
@@ -130,23 +133,9 @@ var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var tiles = L.tileLayer(lightStyle, {}).addTo(map);
 map.attributionControl.addAttribution("<a href=\"https://www.jawg.io\" target=\"_blank\">&copy; Jawg</a> - <a href=\"https://www.openstreetmap.org\" target=\"_blank\">&copy; OpenStreetMap</a>&nbsp;contributors")
 
-txtFile.open("GET", "https://kennyzhang620.github.io/vis_data.csv", false);
-txtFile.onload = function (e) {
-	if (txtFile.readyState === 4) {
-		if (txtFile.status === 200) {
-			var csvData = txtFile.responseText;
 
-			parsedD = $.csv.toObjects(csvData);
-		} else {
-			console.error(txtFile.statusText);
-		}
-	}
-};
-txtFile.onerror = function (e) {
-	console.error(txtFile.statusText);
-};
-
-txtFile.send();
+csvData = document.getElementById("csv_data").innerHTML;
+parsedD = $.csv.toObjects(csvData);
 
 console.log(parsedD);
 
@@ -162,20 +151,19 @@ for (var i = 0; i < inputBars.length; i++) {
 
 			if (filtersPC.style.display != 'block') {
 				if (i + 8 < inputBars.length) {
-					inputBars[i + 8].value = inputBars[i].value;
+					inputBars[i + 8].value = inputBars[i].value?inputBars[i].value.trim():"";
 				}
 			}
-
 			else {
 				if (i - 8 >= 0) {
-					inputBars[i - 8].value = inputBars[i].value;
+					inputBars[i - 8].value = inputBars[i].value?inputBars[i].value.trim():"";
 				}
 			}
 		}
 
         console.log("DXXXX: ", inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
 		filter(inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
-
+		return this;
 	});
 
  
@@ -230,9 +218,9 @@ function loadLeftPanel(i) {
 
 
 	var Project = parsedD[i].Project;
-	var PIs = parsedD[i]["PI "];
+	var PIs = parsedD[i]["PI"];
 	var CoPIs = parsedD[i]["Co-PI(s)"];
-	var Collabs = parsedD[i]["Collaborators\n(not funders)"];
+	var Collabs = parsedD[i]["Collaborators(not funders)"];
 	var Funder = parsedD[i].Funder;
 	var TimePeriod = parsedD[i]["Funding period"];
 	var keywords = parsedD[i]["Research keywords"];
@@ -303,29 +291,30 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 	}
 
 	markers.length = 0;
-
+	var count = 0;
 
 	for (var i = 0; i < parsedD.length; i++) {
 
-		var Project = parsedD[i].Project;
-		var PIs = parsedD[i]["PI "];
-		var CoPIs = parsedD[i]["Co-PI(s)"];
-		var Collabs = parsedD[i]["Collaborators\n(not funders)"];
-		var Funder = parsedD[i].Funder;
-		var TimePeriod = parsedD[i]["Funding period"];
-		var keywords = parsedD[i]["Research keywords"];
-		var site = parsedD[i]["Research Sites"];
-		var coordsLat = parsedD[i].latitude;
-		var coordsLong = parsedD[i].longitude;
+		var Project = parsedD[i].Project?.trim()??"";
+		var PIs = parsedD[i]["PI"]?.trim()??"";
+		var CoPIs = parsedD[i]["Co-PI(s)"]?.trim()??""
+		var Collabs = parsedD[i]["Collaborators\n(not funders)"]?.trim()??"";
+		var Funder = parsedD[i].Funder?.trim()??"";
+		var TimePeriod = parsedD[i]["Funding period"]?.trim()??"";
+		var keywords = parsedD[i]["Research keywords"]?.trim()??"";
+		var site = parsedD[i]["Research Sites"]?.trim()??"";
+		var coordsLat = parsedD[i].latitude.trim()??"";
+		var coordsLong = parsedD[i].longitude.trim()??"";
+		
 
-		if (Project.toLowerCase().includes(projectName.toLowerCase()) && 
-		    site.toLowerCase().includes(researchNames.toLowerCase()) && 
-			PIs.toLowerCase().includes(piNames.toLowerCase()) && 
-			CoPIs.toLowerCase().includes(copiNames.toLowerCase()) && 
-			Collabs.toLowerCase().includes(collabNames.toLowerCase()) &&
-			Funder.toLowerCase().includes(funderName.toLowerCase()) && 
-			TimePeriod.toLowerCase().includes(timePeriod.toLowerCase()) && 
-			keywords.toLowerCase().includes(keywordList.toLowerCase())) 
+		if (Project.toLowerCase().includes(projectName?.toLowerCase()) && 
+		    site.toLowerCase().includes(researchNames?.toLowerCase()) && 
+			PIs.toLowerCase().includes(piNames?.toLowerCase()) && 
+			CoPIs.toLowerCase().includes(copiNames?.toLowerCase()) && 
+			Collabs.toLowerCase().includes(collabNames?.toLowerCase()) &&
+			Funder.toLowerCase().includes(funderName?.toLowerCase()) && 
+			TimePeriod.toLowerCase().includes(timePeriod?.toLowerCase()) && 
+			keywords.toLowerCase().includes(keywordList?.toLowerCase())) 
 		{
 			const markerI = (L.circleMarker([parsedD[i].latitude, parsedD[i].longitude], {
 				// color: 'blue',
@@ -334,11 +323,13 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 				fillOpacity: 0.50,
 				radius: 8
 			}).addTo(map));
+            
+			count = count+1;
 
 			var metadata = `
 
-								<header id="rname" style="font-size:medium; text-align:left; font-weight:800;">${Project}</header>
-									<section id="Full_section" style="margin-top:10px">
+								<header id="rname" style="background-color:transparent; font-size:medium; text-align:left; font-weight:800;">${Project}</header>
+									<section id="Full_section" style="margin-top:10px;">
 											<strong>Funder and Year</strong>
                                             <div id="fund_section" style="text-align:left;">
                                                 
@@ -372,11 +363,48 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 
 
 `;
+var metadata2 = `
+<div class="tooltip">
+<header id="rname" style="background-color:transparent; font-size:medium; text-align:left; font-weight:800;">${Project}</header>
+	<section id="Full_section" style="margin-top:10px;">
+			<strong>Funder and Year</strong>
+			<div id="fund_section" style="text-align:left;">
+				
+					<div class="research_details">${Funder}</div>
+					
+			  
+					<div class="research_details">${TimePeriod}</div>
+			   
+			</div>
+			<strong>PI and Co-PIs</strong>
+			<div id="pi_section" style="text-align:left;">
+				
+					<div class="research_details" style="padding-bottom:3px">${PIs}</div>
+					
+					<div class="research_details">${CoPIs}</div>
+			   
+			</div>
+			<strong>Research Site</strong>
+			<div id="poi_site" style="display: block;">
+				<div class="research_details">${site}</div>
+			</div>
+			<!-- <div id="options" style="text-align:left;">
+				<div id="more_options" style="padding:2px; width:40%;display:inline-block;">
+					<div class="rounded_button" onclick="loadLeftPanel(${i})">More</div>
+				</div>
+				<div id="navigate" style="padding:2px; width:55%;display:inline-block;">
+					<div class="rounded_button" onclick="navigate(redirectGMapNav, coordsToStr(homeCoords), coordsToStr( [${parseFloat(parsedD[i].latitude)}, ${parseFloat(parsedD[i].longitude)}] ))">Navigate to Site</div>
+				</div>
+			</div> -->
+	</section>
+</div>
+
+`;
 
 			//	console.log("===>", Project, PIs, CoPIs, Collabs);
 			//		console.log(markers[i]);
-
-			markerI.bindPopup(metadata);
+			markerI.bindTooltip(metadata2, {className: 'tooltip'});
+			markerI.bindPopup(metadata, {className: "popupWin"});
 			markerI.on('click', function (e) {
 				if (map['_zoom'] <= 10) {
 					console.log(e);
@@ -387,18 +415,23 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 				filtersPC.style.display = "none";
 				filtersPne.style.display = "none";
 		
-				FiltersActive = false;
+				//FiltersActive = false;
 			}).on('popupclose', function (e) {
 				map.setZoom(minZoomV);
 				map.setView(homeCoords, minZoomV);
 				console.log("popupclose");
+				// filtersBtn.click();
+				restorePreviousView();
 			});
 
 			markers.push(markerI);
 		}
 
+		
+
 	}
 
+	console.log("added #markers:",count );
 }
 
 filter("","","","","","","","");
@@ -417,14 +450,33 @@ function closeRightPane() {
 	//adjustWin();
 }
 
+function zoomChange() {
+	if (infoPanel.style.display != 'none') {
+		infoPanel.style.display = "none";	
+	}
+
+	if (map['_zoom'] < 10 ) {
+		//document.getElementsByTagName("STYLE").display = "none";
+		//document.className("tooltioWin").style("display") = "none";
+		document.querySelectorAll(".leaflet-tooltip-pane").forEach(a => a.style.display = "none");
+	} else {
+		// document.getElementsByTagName("STYLE").display = "block";
+		// document.className("tooltioWin").style("display") = "none";
+		document.querySelectorAll(".leaflet-tooltip-pane").forEach(a => a.style.display = "block");
+	}
+	 
+
+	console.log("zoom level: ", map['_zoom']);
+	//adjustWin();
+}
 
 
 function searchLocalDB(query) {
 	for (var i = 0; i < parsedD.length; i++) {
 		var Project = parsedD[i].Project;
-		var PIs = parsedD[i]["PI "];
+		var PIs = parsedD[i]["PI"];
 		var CoPIs = parsedD[i]["Co-PI(s)"];
-		var Collabs = parsedD[i]["Collaborators\n(not funders)"];
+		var Collabs = parsedD[i]["Collaborators(not funders)"];
 		var Funder = parsedD[i].Funder;
 		var TimePeriod = parsedD[i]["Funding period"];
 		var keywords = parsedD[i]["Research keywords"];
@@ -490,7 +542,7 @@ settingsBtn.addEventListener('mouseup', function (clicked) {
 
 
 map.on('moveend', closeRightPane)
-map.on('zoomend', closeRightPane)
+map.on('zoomend', zoomChange)
 
 window.addEventListener('resize', function (meta) {
 	if (FiltersActive) {
@@ -514,13 +566,27 @@ filtersBtn.addEventListener('click', function (clicked) {
 		if (window.innerWidth / window.innerHeight >= (4 / 3)) {
 			filtersPC.style.display = "block";
 			filtersPne.style.display = "none";
+			console.log("standard window, ratio:", window.innerWidth / window.innerHeight);
 		}
 		else {
 			filtersPne.style.display = "block";
 			filtersPC.style.display = "none";
+			console.log("vertical window, ratio:", window.innerWidth / window.innerHeight);
 		}
 
 		FiltersActive = true;
+
+		var container1 = document.getElementById("filters_norm");
+		var inputs = container1.getElementsByTagName('input');
+    	for (var index = 0; index < inputs.length; ++index) {
+        	inputs[index].value = '';
+    	}
+
+		var container2 = document.getElementById("filters_pc");
+		var inputs = container2.getElementsByTagName('input');
+    	for (var index = 0; index < inputs.length; ++index) {
+        	inputs[index].value = '';
+    	}
 	}
 	else {
 		filtersPC.style.display = "none";
@@ -532,6 +598,41 @@ filtersBtn.addEventListener('click', function (clicked) {
 	//adjustWin();
 });
 
+function restorePreviousView() {
+	if (FiltersActive) {
+		if (window.innerWidth / window.innerHeight >= (4 / 3)) {
+			filtersPC.style.display = "block";
+			filtersPne.style.display = "none";
+			console.log("standard window, ratio:", window.innerWidth / window.innerHeight);
+		}
+		else {
+			filtersPne.style.display = "block";
+			filtersPC.style.display = "none";
+			console.log("vertical window, ratio:", window.innerWidth / window.innerHeight);
+		}
+
+		// FiltersActive = true;
+
+		// var container1 = document.getElementById("filters_norm");
+		// var inputs = container1.getElementsByTagName('input');
+    	// for (var index = 0; index < inputs.length; ++index) {
+        // 	inputs[index].value = '';
+    	// }
+
+		// var container2 = document.getElementById("filters_pc");
+		// var inputs = container2.getElementsByTagName('input');
+    	// for (var index = 0; index < inputs.length; ++index) {
+        // 	inputs[index].value = '';
+    	// }
+	}
+	else {
+		filtersPC.style.display = "none";
+		filtersPne.style.display = "none";
+
+		// FiltersActive = false;
+	}
+	console.log("view restored");
+}
 function coordsToStr(coords) {
 	return coords[0] + ',' + coords[1];
 }
