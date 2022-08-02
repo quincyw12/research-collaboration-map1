@@ -404,7 +404,8 @@ var metadata2 = `
 			//	console.log("===>", Project, PIs, CoPIs, Collabs);
 			//		console.log(markers[i]);
 			markerI.bindTooltip(metadata2, {className: 'tooltip'});
-			markerI.bindPopup(metadata, {className: "popupWin"});
+			// uncomment for mix of tooltip and popup
+			/* markerI.bindPopup(metadata, {className: "popupWin"});
 			markerI.on('click', function (e) {
 				if (map['_zoom'] <= 10) {
 					console.log(e);
@@ -423,7 +424,7 @@ var metadata2 = `
 				// filtersBtn.click();
 				restorePreviousView();
 			});
-
+            */
 			markers.push(markerI);
 		}
 
@@ -454,8 +455,11 @@ function zoomChange() {
 	if (infoPanel.style.display != 'none') {
 		infoPanel.style.display = "none";	
 	}
-
-	if (map['_zoom'] < 10 ) {
+    
+	// Tooltip only
+	document.querySelectorAll(".leaflet-tooltip-pane").forEach(a => a.style.display = "block");
+    // or mix of popup and tooltip
+	/* if (map['_zoom'] < 10 ) {
 		//document.getElementsByTagName("STYLE").display = "none";
 		//document.className("tooltioWin").style("display") = "none";
 		document.querySelectorAll(".leaflet-tooltip-pane").forEach(a => a.style.display = "none");
@@ -464,7 +468,7 @@ function zoomChange() {
 		// document.className("tooltioWin").style("display") = "none";
 		document.querySelectorAll(".leaflet-tooltip-pane").forEach(a => a.style.display = "block");
 	}
-	 
+	*/
 
 	console.log("zoom level: ", map['_zoom']);
 	//adjustWin();
