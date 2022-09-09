@@ -89,6 +89,16 @@ body {
     animation-duration: 1s;
 }
 
+#image_display {
+    overflow-x:scroll;
+    overflow-y:hidden;
+    display:inline-flex;
+    border: none;
+    top:-250px;
+    animation-name: none;
+    background-color:transparent;
+}
+
 .research_details__ {
     border: 2px solid grey;
     overflow: scroll;
@@ -121,6 +131,27 @@ body {
     animation-duration: 1s;
 }
 
+.img_header {
+    text-align: left;
+    font-size: 14px;
+    display:inline-flex;
+    padding: 10px;
+}
+
+.text_content {
+    background-color:white;
+    width: 400px;
+}
+
+#title_header {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#organization_bdy {
+    font-size: 14px;
+    font-weight: 300;
+}
 .f_header {
     text-align: center;
     font-size: 26px;
