@@ -2,7 +2,7 @@
 
 // Initialize the map.
 const USE_SERVER_DATA = true;
-const Image_Shift = 484;
+const Image_Shift = 398;
 var homeCoords = [52.476089, -50.825867];
 
 var txtFile = new XMLHttpRequest();
@@ -10,6 +10,7 @@ var parsedD = {};
 var results = [];
 
 var markers = [];
+var txtLabels = [];
 var max_res_size = 12;
 var curr_limit = max_res_size;
 
@@ -138,8 +139,9 @@ console.log(parsedD);
 for (var i = 0; i < inputBars.length; i++) {
 	console.log("aaa_>", i, inputBars[i].placeholder, "  ", inputBars[i].value);
 
-	inputBars[i].addEventListener('keyup', function (keyin) {
+	inputBars[i].addEventListener('keypress', function (keyin) {
 
+		if (keyin.key == "Enter") {
 		// Inefficient code ahead!
 
 		for (var i = 0; i < inputBars.length; i++) {
@@ -159,6 +161,7 @@ for (var i = 0; i < inputBars.length; i++) {
      //   console.log("DXXXX: ", inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
 		filter(inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
 		return this;
+	}
 	});
 
  
@@ -190,11 +193,11 @@ function enableView() {
 
 function updatepos() {
 	var x = image_panel;
-	console.log("SRL_>", x.scrollTop, parseInt(x.scrollTop / Image_Shift));
 	
+	console.log("SRL_>", x.scrollTop, parseInt(x.scrollTop / Image_Shift));
 	var ind = parseInt(x.scrollTop/Image_Shift);
 	
-	if (ind != prevMarker) {
+	if (ind != prevMarker && markers.length > 0) {
 		markers[prevMarker].setStyle({color: 'transparent'})
 		markers[prevMarker].setStyle({fillOpacity: 0.5})
 		prevMarker = ind;
@@ -247,6 +250,8 @@ function generateCell(res, max_size) {
         var container = inner[0];
         
 		//console.log("res1: ", res[i].Project)
+		var filler = `<div id="filler" style="width: 100px; height: 100px; background-color: transparent;"></div>`;
+		
         var html = `<div class="img_header">
 							<div id="circle_base" style="text-align: center;">
 								<div id="circle" style="color: white; background-color: #660099; opacity: 0.5; border-radius: 40px; width: 25px; height: 25px;">${i+1}</div>
@@ -258,15 +263,17 @@ function generateCell(res, max_size) {
                                 <div id="organization_bdy" style="padding:6px;">${res[i]["PI "]} (PI) - ${res[i]["Research Sites"]}</div>
                             </div>
                         </div>
-		
-		
-		
+
 		`
 
         var newNode = document.createRange().createContextualFragment(html);
         container.appendChild(newNode);
 	    }
     }
+	
+    	var newNode2 = document.createRange().createContextualFragment(filler);
+    	container.appendChild(newNode2);
+
 }
 
 
@@ -348,9 +355,11 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 	results.length = 0;
 	for (var x = 0; x < markers.length; x++) {
 		map.removeLayer(markers[x]);
+		map.removeLayer(txtLabels[x]);
 	}
 
 	markers.length = 0;
+	txtLabels.length = 0;
 	var count = 0;
 
 	for (var i = 0; i < parsedD.length; i++) {
@@ -379,95 +388,20 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 			
 			var labelTxt = L.divIcon({className: 'my-div-icon', html: `<div id="label" style="text-align:center; color: white; background-color: transparent;">${i+1}</div>`});
 			
-			const markerI = (L.circleMarker([parsedD[i].latitude, parsedD[i].longitude], {
+			const markerI = (L.circleMarker([parsedD[count].latitude, parsedD[count].longitude], {
 				// color: 'blue',
 				color: 'transparent',
 				fillColor: '#660099', //'#FA255E', //'#f03',
 				fillOpacity: 0.50,
 				radius: 8,
-				id: i,
+				id: count,
 			}).addTo(map));
 			
-			const markerT = L.marker([parsedD[i].latitude, parsedD[i].longitude], {
-				icon: labelTxt, id: i
+			const markerT = L.marker([parsedD[count].latitude, parsedD[count].longitude], {
+				icon: labelTxt, id: count
 			}).addTo(map);
             
 			count = count+1;
-
-			var metadata = `
-
-								<header id="rname" style="background-color:transparent; font-size:medium; text-align:left; font-weight:800;">${Project}</header>
-									<section id="Full_section" style="margin-top:10px;">
-											<strong>Funder and Year</strong>
-                                            <div id="fund_section" style="text-align:left;">
-                                                
-                                                    <div class="research_details">${Funder}</div>
-                                                    
-                                              
-                                                    <div class="research_details">${TimePeriod}</div>
-                                               
-                                            </div>
-											<strong>PI and Co-PIs</strong>
-											<div id="pi_section" style="text-align:left;">
-                                                
-                                                    <div class="research_details" style="padding-bottom:3px">${PIs}</div>
-                                                    
-                                                    <div class="research_details">${CoPIs}</div>
-                                               
-                                            </div>
-											<strong>Research Site</strong>
-                                            <div id="poi_site" style="display: block;">
-                                                <div class="research_details">${site}</div>
-                                            </div>
-											<!-- <div id="options" style="text-align:left;">
-												<div id="more_options" style="padding:2px; width:40%;display:inline-block;">
-													<div class="rounded_button" onclick="loadLeftPanel(${i})">More</div>
-												</div>
-												<div id="navigate" style="padding:2px; width:55%;display:inline-block;">
-													<div class="rounded_button" onclick="navigate(redirectGMapNav, coordsToStr(homeCoords), coordsToStr( [${parseFloat(parsedD[i].latitude)}, ${parseFloat(parsedD[i].longitude)}] ))">Navigate to Site</div>
-												</div>
-											</div> -->
-									</section>
-
-
-`;
-var metadata2 = `
-<div class="tooltip">
-<header id="rname" style="background-color:transparent; font-size:medium; text-align:left; font-weight:800;">${Project}</header>
-	<section id="Full_section" style="margin-top:10px;">
-			<strong>Funder and Year</strong>
-			<div id="fund_section" style="text-align:left;">
-				
-					<div class="research_details">${Funder}</div>
-					
-			  
-					<div class="research_details">${TimePeriod}</div>
-			   
-			</div>
-			<strong>PI and Co-PIs</strong>
-			<div id="pi_section" style="text-align:left;">
-				
-					<div class="research_details" style="padding-bottom:3px">${PIs}</div>
-					
-					<div class="research_details">${CoPIs}</div>
-			   
-			</div>
-			<strong>Research Site</strong>
-			<div id="poi_site" style="display: block;">
-				<div class="research_details">${site}</div>
-			</div>
-			<!-- <div id="options" style="text-align:left;">
-				<div id="more_options" style="padding:2px; width:40%;display:inline-block;">
-					<div class="rounded_button" onclick="loadLeftPanel(${i})">More</div>
-				</div>
-				<div id="navigate" style="padding:2px; width:55%;display:inline-block;">
-					<div class="rounded_button" onclick="navigate(redirectGMapNav, coordsToStr(homeCoords), coordsToStr( [${parseFloat(parsedD[i].latitude)}, ${parseFloat(parsedD[i].longitude)}] ))">Navigate to Site</div>
-				</div>
-			</div> -->
-	</section>
-</div>
-
-`;
 
 			//	console.log("===>", Project, PIs, CoPIs, Collabs);
 			//		console.log(markers[i]);
@@ -484,8 +418,9 @@ var metadata2 = `
 			});
             
 			markers.push(markerI);
+			txtLabels.push(labelTxt);
 
-			results.push(parsedD[i]);
+			results.push(parsedD[count]);
 		}
 	}
 
