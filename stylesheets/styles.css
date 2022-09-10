@@ -2,6 +2,7 @@
 ::-webkit-scrollbar {
     width: 2px;
     height: 2px;
+    display: none;
 }
 
 /* Track */
@@ -134,13 +135,14 @@ body {
 .img_header {
     text-align: left;
     font-size: 14px;
-    display:inline-flex;
+    display:block;
     padding: 10px;
 }
 
 .text_content {
     background-color:white;
     width: 400px;
+    height: 200px;
 }
 
 #title_header {
@@ -167,7 +169,7 @@ body {
 
 #filters_pc {
     display: none;
-    width: 60%;
+    width: 90%;
     top: -90px;
     z-index: 10000;
 }

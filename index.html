@@ -122,45 +122,41 @@
                     <div class="Settings_Pane">
                         <input type="image" src="icons/home-icon.png" id="homebtn">
                         <input type="image" src="icons/search-icon.png" id="settingsbtn">
-                    </div>
-                    <section id="options_meta" style="width:33%; border:2px dotted grey; display:block; z-index:1000;">
 
-                        <div class="map_container" id="filters_pc">
-                            <div class="Filters_Pane">
-                                <div class="f_header">
-                                    Filter Options
+                        <section id="options_meta" style="width:100%; display:flex; z-index:1000;">
 
-                                    <input type="text" class="filter_input" id="filter_search" placeholder="Project Name" style="width:93%;padding:5px;text-align:left;" hidden />
-                                    <input type="text" class="filter_input" id="filter_site" placeholder="Research Sites" style="width: 93%; padding: 5px; text-align: left;" />
-                                    <div class="pi_section">
-                                        <input type="text" class="filter_input" id="filter_pi_main" maxlength="140" placeholder="PI" style="width: 94%; padding: 5px; text-align: left;" />
-                                        <input type="text" class="filter_input" id="filter_pi_sub" placeholder="Co-PIs" style="width: 93%; padding: 5px; text-align: left;" />
+                            <div class="map_container" id="filters_pc" style="">
+                                <div class="Filters_Pane">
+                                    <div class="f_header">
+                                        Filter Options
+
+                                        <input type="text" class="filter_input" id="filter_search" placeholder="Project Name" style="width:93%;padding:5px;text-align:left;" hidden />
+                                        <input type="text" class="filter_input" id="filter_site" placeholder="Research Sites" style="width: 93%; padding: 5px; text-align: left;" />
+                                        <div class="pi_section">
+                                            <input type="text" class="filter_input" id="filter_pi_main" maxlength="140" placeholder="PI" style="width: 94%; padding: 5px; text-align: left;" />
+                                            <input type="text" class="filter_input" id="filter_pi_sub" placeholder="Co-PIs" style="width: 93%; padding: 5px; text-align: left;" />
+                                        </div>
+                                        <input type="text" class="filter_input" id="filter_colabs" placeholder="Collaborators" style="width: 93%; padding: 5px; text-align: left;" hidden />
+                                        <div class="fund_section">
+                                            <input type="text" class="filter_input" id="filter_fun_main" placeholder="Funder" style="width: 93%; padding: 5px; text-align: left;" />
+                                            <input type="text" class="filter_input" id="filter_fun_time" placeholder="Period" style="width: 93%; padding: 5px; text-align: left;" />
+                                        </div>
+                                        <input type="text" class="filter_input" id="filter_keywords" placeholder="Keywords" style="width: 93%; padding: 5px; text-align: left;" hidden />
                                     </div>
-                                    <input type="text" class="filter_input" id="filter_colabs" placeholder="Collaborators" style="width: 93%; padding: 5px; text-align: left;" hidden />
-                                    <div class="fund_section">
-                                        <input type="text" class="filter_input" id="filter_fun_main" placeholder="Funder" style="width: 93%; padding: 5px; text-align: left;" />
-                                        <input type="text" class="filter_input" id="filter_fun_time" placeholder="Period" style="width: 93%; padding: 5px; text-align: left;" />
-                                    </div>
-                                    <input type="text" class="filter_input" id="filter_keywords" placeholder="Keywords" style="width: 93%; padding: 5px; text-align: left;" hidden />
                                 </div>
                             </div>
+                        </section>
+
+                    </div>
+
+                    <div class="img_col_header" id="image_display" style="height: 90vh; width: 400px; position: relative; top: 60px; right: 0px; z-index: 1000; overflow-y:scroll; overflow-x:no-display;" onmouseover="disableView()" onmouseout="enableView()" onscroll="updatepos()">
+                        <div class="img_collection">
                         </div>
-                    </section>
+                    </div>
+
                 </div>
 
             </section>
-
-            <div class="map_container">
-                <div class="Filters_Pane" id="image_display" onscroll="updatepos()">
-
-                    <div class="img_collection" style="display:inline-flex;">
-                    </div>
-
-                </div>
-            </div>
-
-
-
 
         </section>
 
