@@ -2,7 +2,7 @@
 
 // Initialize the map.
 const USE_SERVER_DATA = true;
-const Image_Shift = 398;
+const Image_Shift = 510;
 var homeCoords = [52.476089, -50.825867];
 
 var txtFile = new XMLHttpRequest();
@@ -198,8 +198,11 @@ function updatepos() {
 	var ind = parseInt(x.scrollTop/Image_Shift);
 	
 	if (ind != prevMarker && markers.length > 0) {
-		markers[prevMarker].setStyle({color: 'transparent'})
-		markers[prevMarker].setStyle({fillOpacity: 0.5})
+		if (prevMarker >= 0 && prevMarker < markers.length) {
+			markers[prevMarker].setStyle({ color: 'transparent' })
+			markers[prevMarker].setStyle({ fillOpacity: 0.5 })
+		}
+
 		prevMarker = ind;
 	}
 	
@@ -217,11 +220,13 @@ function updatepos() {
 	}
 	
 	console.log("MMK: ", markers[ind]);
-	
-		markers[ind].setStyle({color: 'purple'})
-		markers[ind].setStyle({fillOpacity: 1})
-	
-		map.setView([results[ind].latitude, results[ind].longitude]);
+
+		if (ind >= 0 && ind < markers.length) {
+			markers[ind].setStyle({ color: 'purple' })
+			markers[ind].setStyle({ fillOpacity: 1 })
+
+			map.setView([results[ind].latitude, results[ind].longitude]);
+		}
 	}
 	
 }
@@ -269,10 +274,10 @@ function generateCell(res, max_size) {
         var newNode = document.createRange().createContextualFragment(html);
         container.appendChild(newNode);
 	    }
-    }
-	
-    	var newNode2 = document.createRange().createContextualFragment(filler);
-    	container.appendChild(newNode2);
+	}
+
+	var newNode = document.createRange().createContextualFragment(filler);
+	container.appendChild(newNode);
 
 }
 
@@ -386,7 +391,7 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 			keywords.toLowerCase().includes(keywordList?.toLowerCase())) 
 		{
 			
-			var labelTxt = L.divIcon({className: 'my-div-icon', html: `<div id="label" style="text-align:center; color: white; background-color: transparent;">${i+1}</div>`});
+			var labelTxt = L.divIcon({className: 'my-div-icon', html: `<div id="label" style="text-align:center; color: white; background-color: transparent;">${count + 1}</div>`});
 			
 			const markerI = (L.circleMarker([parsedD[count].latitude, parsedD[count].longitude], {
 				// color: 'blue',
@@ -400,8 +405,6 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 			const markerT = L.marker([parsedD[count].latitude, parsedD[count].longitude], {
 				icon: labelTxt, id: count
 			}).addTo(map);
-            
-			count = count+1;
 
 			//	console.log("===>", Project, PIs, CoPIs, Collabs);
 			//		console.log(markers[i]);
@@ -420,7 +423,7 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 			markers.push(markerI);
 			txtLabels.push(labelTxt);
 
-			results.push(parsedD[count]);
+			results.push(parsedD[count++]);
 		}
 	}
 
