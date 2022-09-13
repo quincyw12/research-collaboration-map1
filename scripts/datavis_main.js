@@ -2,7 +2,7 @@
 
 // Initialize the map.
 const USE_SERVER_DATA = true;
-const Image_Shift = 510;
+const Image_Shift = 553;
 var homeCoords = [52.476089, -50.825867];
 
 var txtFile = new XMLHttpRequest();
@@ -194,7 +194,7 @@ function enableView() {
 function updatepos() {
 	var x = image_panel;
 	
-	console.log("SRL_>", x.scrollTop, parseInt(x.scrollTop / Image_Shift));
+	console.log("SRL_>", x.scrollTop, x.scrollTop / Image_Shift);
 	var ind = parseInt(x.scrollTop/Image_Shift);
 	
 	if (ind != prevMarker && markers.length > 0) {
@@ -219,13 +219,14 @@ function updatepos() {
 		generateCell(results, curr_limit);
 	}
 	
-	console.log("MMK: ", markers[ind]);
+	//console.log("MMK: ", markers[ind]);
 
 		if (ind >= 0 && ind < markers.length) {
 			markers[ind].setStyle({ color: 'purple' })
 			markers[ind].setStyle({ fillOpacity: 1 })
 
 			map.setView([results[ind].latitude, results[ind].longitude]);
+
 		}
 	}
 	
@@ -255,7 +256,7 @@ function generateCell(res, max_size) {
         var container = inner[0];
         
 		//console.log("res1: ", res[i].Project)
-		var filler = `<div id="filler" style="width: 100px; height: 100px; background-color: transparent;"></div>`;
+		var filler = `<div id="filler" style="width: 100px; height: 100px;"></div>`;
 		
         var html = `<div class="img_header">
 							<div id="circle_base" style="text-align: center;">
