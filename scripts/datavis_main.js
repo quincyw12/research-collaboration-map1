@@ -3,7 +3,8 @@
 // Initialize the map.
 const USE_SERVER_DATA = true;
 const Image_Shift = 553;
-var homeCoords = [52.476089, -50.825867];
+//var homeCoords = [52.476089, -50.825867];
+var homeCoords = [52.476089, -87.276242];
 
 var txtFile = new XMLHttpRequest();
 var parsedD = {};
@@ -51,8 +52,12 @@ L.control.zoom({
 
 map.setZoom(minZoomV);
 
-var southWest = L.latLng(-89.98155760646617, -180),
-northEast = L.latLng(89.99346179538875, 180);
+//var southWest = L.latLng(-89.98155760646617, -179); 
+//var northEast = L.latLng(89.99346179538875, 180);
+
+var southWest = L.latLng(-90, -220);
+var northEast = L.latLng(90, 200);
+
 var bounds = L.latLngBounds(southWest, northEast);
 
 map.setMaxBounds(bounds);
