@@ -303,9 +303,9 @@ function generateCell(res, max_size) {
 		
 		var imageD = res[i].Image_URL;
 		
-		console.log("sx: ", res)
+		//console.log("sx: ", res)
 		
-		if (imageD == null) {
+		if (imageD == null || imageD == "image_data") {
 			imageD = "icons/placeholder.png"
 		}
 		
