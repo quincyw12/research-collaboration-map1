@@ -288,6 +288,23 @@ function clearCells() {
 	console.log("cleared/");
 }
 
+function IsValidImageUrl(url) {
+	    var http = new XMLHttpRequest();
+
+		var res = false;
+		try {
+	    http.open('GET', url, false);
+	    http.send();
+		
+		res = http.status != 404;
+		}
+		catch (error) {
+			res = false;
+		}
+		
+	    return res;
+}
+
 function generateCell(res, max_size) {
 
     var inner = document.getElementsByClassName("img_collection");
@@ -305,7 +322,7 @@ function generateCell(res, max_size) {
 		
 		//console.log("sx: ", res)
 		
-		if (imageD == null || imageD == "image_data") {
+		if (imageD == null || !IsValidImageUrl(imageD)) {
 			imageD = "icons/placeholder.png"
 		}
 		
