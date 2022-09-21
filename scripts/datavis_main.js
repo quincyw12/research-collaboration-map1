@@ -317,7 +317,7 @@ function generateCell(res, max_size) {
 							<div class="text_content">
                                 <div id="title_header" style="padding:6px; width: 90%;">${res[i].Project}</div>
                                 <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].Funder} - ${res[i]["Funding period"]}</div>
-                                <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i]["PI "]} (PI) - ${res[i]["Research Sites"]}</div>
+                                <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].PI} (PI) - ${res[i]["Research Sites"]}</div>
                             </div>
                         </div>
 
