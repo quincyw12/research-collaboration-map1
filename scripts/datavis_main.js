@@ -113,7 +113,7 @@ var tiles = L.tileLayer(lightStyle, {}).addTo(map);
 map.attributionControl.addAttribution("<a href=\"https://www.jawg.io\" target=\"_blank\">&copy; Jawg</a> - <a href=\"https://www.openstreetmap.org\" target=\"_blank\">&copy; OpenStreetMap</a>&nbsp;contributors")
 
 if (USE_SERVER_DATA) {
-txtFile.open("GET", "https://kennyzhang620.github.io/vis_data.csv", false);
+txtFile.open("GET", "https://quincyw12.github.io/research-collaboration-map1/vis_data.csv", false);
 txtFile.onload = function (e) {
 	if (txtFile.readyState === 4) {
 		if (txtFile.status === 200) {
