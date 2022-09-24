@@ -288,6 +288,23 @@ function clearCells() {
 	console.log("cleared/");
 }
 
+function IsValidImageUrl(url) {
+	    var http = new XMLHttpRequest();
+
+		var res = false;
+		try {
+	    http.open('GET', url, false);
+	    http.send();
+		
+		res = http.status != 404;
+		}
+		catch (error) {
+			res = false;
+		}
+		
+	    return res;
+}
+
 function generateCell(res, max_size) {
 
     var inner = document.getElementsByClassName("img_collection");
@@ -303,9 +320,9 @@ function generateCell(res, max_size) {
 		
 		var imageD = res[i].Image_URL;
 		
-		console.log("sx: ", res)
+		//console.log("sx: ", res)
 		
-		if (imageD == null) {
+		if (imageD == null || !IsValidImageUrl(imageD)) {
 			imageD = "icons/placeholder.png"
 		}
 		
@@ -317,7 +334,7 @@ function generateCell(res, max_size) {
 							<div class="text_content">
                                 <div id="title_header" style="padding:6px; width: 90%;">${res[i].Project}</div>
                                 <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].Funder} - ${res[i]["Funding period"]}</div>
-                                <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i]["PI "]} (PI) - ${res[i]["Research Sites"]}</div>
+                                <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].PI} (PI) - ${res[i]["Research Sites"]}</div>
                             </div>
                         </div>
 
