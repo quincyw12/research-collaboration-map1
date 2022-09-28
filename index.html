@@ -22,7 +22,7 @@
           max-height: 200px;
           overflow-y: auto;
           /* prevent horizontal scrollbar */
-          ---overflow: hidden;
+          overflow: auto;
           white-space: nowrap;
           text-overflow: ellipsis;
           margin-right:8px;
@@ -30,10 +30,10 @@
           border-style: outset;
         }
         li.ui-menu-item {
-            overflow-wrap: break-word;
+            overflow-wrap: normal;
             white-space: nowrap;
             text-overflow: ellipsis;
-            max-width: 300px;
+            max-width: 200px;
         }
         /* IE 6 doesn't support max-height
          * we use height instead, but this forces the menu to always be this tall
@@ -62,7 +62,7 @@
                 <input type="text" class="filter_input" id="filter_search" placeholder="Project Name" style="width:93%;padding:5px;text-align:left;" hidden />
                 <input type="text" class="filter_input" id="filter_site" placeholder="Research Sites" style="width: 93%; padding: 5px; text-align: left;" />
                 <div class="pi_section">
-                    <input type="text" class="filter_input" id="filter_pi_main" placeholder="PI" style="width: 50%; padding: 5px; text-align: left;" />
+                    <input type="text" class="filter_input" id="filter_pi_main" placeholder="Principle Investigator" style="width: 50%; padding: 5px; text-align: left;" />
                     <input type="text" class="filter_input" id="filter_pi_sub" placeholder="Co-PIs" style="width: 38%; padding: 5px; text-align: left;" />
                 </div>
                 <input type="text" class="filter_input" id="filter_colabs" placeholder="Collaborators" style="width: 93%; padding: 5px; text-align: left;" hidden />
@@ -133,7 +133,7 @@
                                         <input type="text" class="filter_input" id="filter_search" placeholder="Project Name" style="width:93%;padding:5px;text-align:left;" hidden />
                                         <input type="text" class="filter_input" id="filter_site" placeholder="Research Sites" style="width: 93%; padding: 5px; text-align: left;" />
                                         <div class="pi_section">
-                                            <input type="text" class="filter_input" id="filter_pi_main" maxlength="140" placeholder="PI" style="width: 94%; padding: 5px; text-align: left;" />
+                                            <input type="text" class="filter_input" id="filter_pi_main" maxlength="140" placeholder="Principle Investigator" style="width: 94%; padding: 5px; text-align: left;" />
                                             <input type="text" class="filter_input" id="filter_pi_sub" placeholder="Co-PIs" style="width: 93%; padding: 5px; text-align: left;" />
                                         </div>
                                         <input type="text" class="filter_input" id="filter_colabs" placeholder="Collaborators" style="width: 93%; padding: 5px; text-align: left;" hidden />
