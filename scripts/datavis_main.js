@@ -330,7 +330,7 @@ function generateCell(res, max_size) {
 							<div id="circle_base" style="text-align: center;">
 								<div id="circle" style="color: white; background-color: #660099; opacity: 0.5; border-radius: 40px; width: 25px; height: 25px;">${i + 1}</div>
 							</div>
-                            <input type="image" style="width: 100%; height: 100%;" src="${imageD}"/>
+                            <img type="image" style="width: 100%; height: 100%;" data-src="${imageD}" loading="lazy"/>
 							<div class="text_content">
                                 <div id="title_header" style="padding:6px; width: 90%;">${res[i].Project}</div>
                                 <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].Funder} - ${res[i]["Funding period"]}</div>
