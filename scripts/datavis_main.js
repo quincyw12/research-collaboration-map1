@@ -9,12 +9,14 @@ var homeCoords = [52.476089, -87.276242];
 var txtFile = new XMLHttpRequest();
 var parsedD = {};
 var results = [];
+var colours = [];
 
 var markers = [];
 var max_res_size = 12;
 var curr_limit = max_res_size;
 
 var prevMarker = 0;
+var currLabel = null;
 
 //var searchbar = document.getElementById("search");
 var homebutton = document.getElementById("homebtn");
@@ -67,48 +69,6 @@ map.on('drag', function() {
 
 var mapSize = document.getElementById("map");
 
-function adjustWin0() {
-
-	const zoomLevel = map['_zoom'];
-	const zoom_logo_mapping = {};
-    zoom_logo_mapping[3] = 16500;
-	zoom_logo_mapping[4] = 11500;
-    zoom_logo_mapping[5] = 86000;
-	zoom_logo_mapping[6] = 66200;
-	zoom_logo_mapping[7] = 52000;
-	zoom_logo_mapping[8] = 41400;
-    zoom_logo_mapping[9] = 30000;
-	zoom_logo_mapping[10] = 20000;
-    zoom_logo_mapping[11] = 10000;
-	zoom_logo_mapping[12] = 9000;
-	zoom_logo_mapping[13] = 8000;
-	zoom_logo_mapping[14] = 7000;
-	zoom_logo_mapping[15] = 6000;
-	zoom_logo_mapping[16] = 5000;
-	zoom_logo_mapping[17] = 4000;
-	zoom_logo_mapping[18] = 3000;
-	console.log("adjustWin ZOOM: ", zoomLevel);
-
-	var maxV = (18500 / (maxZoomV / minZoomV)) - 50
-	console.log("adjustWin marker length: ", markers.length);
-	for (var a = 0; a < markers.length; a++) {
-
-		markers[a].setStyle({radius: zoom_logo_mapping[zoomLevel]});
-
-		console.log(markers[a]['_mRadius']);
-	}
-	
-	map.invalidateSize(true);
-
-}
-
-/*
-var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	maxZoom: 19,
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map);
-*/
-
 var tiles = L.tileLayer(lightStyle, {}).addTo(map);
 map.attributionControl.addAttribution("<a href=\"https://www.jawg.io\" target=\"_blank\">&copy; Jawg</a> - <a href=\"https://www.openstreetmap.org\" target=\"_blank\">&copy; OpenStreetMap</a>&nbsp;contributors")
 
@@ -138,38 +98,79 @@ csvData = document.getElementById("csv_data").innerHTML;
 parsedD = $.csv.toObjects(csvData);
 }
 
-// console.log(parsedD);
+function strToColour(str) {
+	var res = str.charCodeAt(0)
+	for (var i = 1; i < str.length; i++) {
+		res -= str.charCodeAt(i)
+	}
 
-for (var i = 0; i < inputBars.length; i++) {
-	console.log("aaa_>", i, inputBars[i].placeholder, "  ", inputBars[i].value);
+	if (res < 0)
+		return -res;
 
-	inputBars[i].addEventListener('keypress', function (keyin) {
+	return res;
+}
 
-		if (keyin.key == "Enter") {
-		// Inefficient code ahead!
+function generateColours(maxList) {
+	var colours = []
+	for (var i = 0; i < 3; i++) {
+		for (var x = 0; x < 250; x++) {
+			for (var y = 0; y < 250; y++) {
 
-		for (var i = 0; i < inputBars.length; i++) {
+				if (colours.length < maxList) {
+					if (i == 0)
+						colours.push([Math.random() * 220, Math.random() * 220, Math.random() * 220]);
 
-			if (filtersPC.style.display != 'block') {
-				if (i + 8 < inputBars.length) {
-					inputBars[i + 8].value = inputBars[i].value?inputBars[i].value.trim():"";
+					if (i == 1)
+						colours.push([Math.random() * 220, Math.random() * 220, Math.random() * 220]);
+
+					if (i == 2)
+						colours.push([Math.random() * 220, Math.random() * 220, Math.random() * 220]);
 				}
-			}
-			else {
-				if (i - 8 >= 0) {
-					inputBars[i - 8].value = inputBars[i].value?inputBars[i].value.trim():"";
+				else {
+					return colours;
 				}
 			}
 		}
-
-     //   console.log("DXXXX: ", inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
-		filter(inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
-		return this;
 	}
-	});
 
- 
+	return colours;
+}
 
+
+function init() {
+	for (var i = 0; i < inputBars.length; i++) {
+		console.log("aaa_>", i, inputBars[i].placeholder, "  ", inputBars[i].value);
+
+		inputBars[i].addEventListener('keypress', function (keyin) {
+
+			if (keyin.key == "Enter") {
+				// Inefficient code ahead!
+
+				for (var i = 0; i < inputBars.length; i++) {
+
+					if (filtersPC.style.display != 'block') {
+						if (i + 8 < inputBars.length) {
+							inputBars[i + 8].value = inputBars[i].value ? inputBars[i].value.trim() : "";
+						}
+					}
+					else {
+						if (i - 8 >= 0) {
+							inputBars[i - 8].value = inputBars[i].value ? inputBars[i].value.trim() : "";
+						}
+					}
+				}
+
+				//   console.log("DXXXX: ", inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
+				filter(inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
+				return this;
+			}
+		});
+
+
+
+	}
+
+	colours = generateColours(parsedD.length);
 }
 
 
@@ -239,6 +240,10 @@ function getRelativePos(currRange, units) {
 
 }
 
+function occludeActive(currl) {
+	currl.parentElement.style.zIndex = currl.style.zIndex;
+}
+
 function updatepos() {
 	var x = image_panel;
 	var ind = parseInt(x.scrollTop/Image_Shift);
@@ -247,7 +252,14 @@ function updatepos() {
 	//console.log("SRL_>", x.scrollTop, x.scrollTop / Image_Shift, currind == undefined, curr_limit);
 	if (currind != prevMarker && markers.length > 0) {
 		if (prevMarker >= 0 && prevMarker < markers.length) {
-			document.getElementById(`label_${prevMarker}`).style = "text-align:center; opacity: 0.5; color: white;background-color: #660099;width: 20px;height: 20px;border-radius: 30px; font-size: 14px;";
+			var label = document.getElementById(`label_${prevMarker}`)
+			label.style.width = "20px";
+			label.style.height = "20px";
+			label.style.fontSize = "14px";
+			label.style.opacity = "0.5";
+			label.style.zIndex = "340";
+
+			occludeActive(label);
 		}
 
 		prevMarker = currind;
@@ -272,16 +284,24 @@ function updatepos() {
 	//console.log("MMK: ", markers[ind]);
 
 		if (currind >= 0 && currind < markers.length) {
-			document.getElementById(`label_${currind}`).style = "text-align:center;color: white;background-color: #660099;width: 40px;height: 40px;border-radius: 30px; font-size: 28px; z-index: 10000;";
+			var label = document.getElementById(`label_${currind}`)
+			label.style.width = "40px";
+			label.style.height = "40px";
+			label.style.fontSize = "28px";
+			label.style.opacity = "1";
+			label.style.zIndex = "10000";
 		//	document.getElementById(`label_${currind}`).style = "text-align:center;color: white;background-color: #660099;width: 40px;height: 40px;border-radius: 30px; font-size: 28px;";
 			//console.log("LX", markers[currind].getElement());
 
+			currLabel = label;
+			occludeActive(currLabel);
 			map.setView([results[currind].latitude, results[currind].longitude]);
 
 		}
 	}
 	
 }
+
 function clearCells() {
     var inner = document.getElementsByClassName("img_collection");
 
@@ -336,16 +356,18 @@ function generateCell(res, max_size) {
 		var filler = `<div id="filler" style="width: 100px; height: 100px;"></div>`;
 		
 		var imageD = res[i].Image_URL;
-		
+		const rgbV = colours[strToColour(res[i].Project) % colours.length];
+
 		var html = `<div class="img_header">
 							<div id="circle_base" style="text-align: center;">
-								<div id="circle" style="color: white; background-color: #660099; opacity: 0.5; border-radius: 40px; width: 25px; height: 25px;">${i+1}</div>
+								<div id="circle" style="color: white; background-color: rgba(${rgbV[0]}, ${rgbV[1]}, ${rgbV[2]}, 1); opacity: 1; border-radius: 40px; width: 25px; height: 25px;">${i + 1}</div>
 							</div>
                             <input type="image" id="image_${i}" style="width: 100%; height: 100%;" src="${imageD}" onerror="loadDefault("image_${i}")"/>
 							<div class="text_content">
                                 <div id="title_header" style="padding:6px; width: 90%;">${res[i].Project}</div>
                                 <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].Funder} - ${res[i]["Funding period"]}</div>
                                 <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].PI} (PI) - ${res[i]["Research Sites"]}</div>
+								<div id="organization_bdy" style="padding:6px; width: 90%;">${res[i]["Co-PI(s)"]} (Co-PI) - ${res[i]["Research Sites"]}</div>
                             </div>
                         </div>
 
@@ -363,9 +385,10 @@ function generateCell(res, max_size) {
 
 }
 
+
 function filter(projectName, researchNames, piNames, copiNames, collabNames, funderName, timePeriod, keywordList) {
 
-	console.log("checkerL -> ", parsedD, projectName, researchNames, piNames, collabNames, funderName, timePeriod, keywordList);
+	//console.log("checkerL -> ", parsedD, projectName, researchNames, piNames, collabNames, funderName, timePeriod, keywordList);
 	clearCells();
 	results.length = 0;
 	for (var x = 0; x < markers.length; x++) {
@@ -398,8 +421,14 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 			TimePeriod.toLowerCase().includes(timePeriod?.toLowerCase()) && 
 			keywords.toLowerCase().includes(keywordList?.toLowerCase())) 
 		{
-			
-			var labelTxt = L.divIcon({ className: 'my-div-icon', html: `<div id="label_${count}" style="text-align:center;color:white; opacity: 0.5; background-color: #660099;width: 20px;height: 20px;border-radius: 30px; font-size: 14px;">${count + 1}</div>`});
+
+			var colourV = strToColour(Project);
+
+			colourV = colourV % colours.length;
+
+		//	console.log("CLR: ", colours[colourV]);
+
+			var labelTxt = L.divIcon({ className: 'my-div-icon', html: `<div id="label_${count}" style="text-align:center;color:white; opacity: 0.8; background-color: rgba(${colours[colourV][0]},${colours[colourV][1]},${colours[colourV][2]},0.8);width: 20px;height: 20px;border-radius: 30px; font-size: 14px;">${count + 1}</div>` });
 			
 			
 			const markerT = L.marker([parsedD[count].latitude, parsedD[count].longitude], {
@@ -413,21 +442,23 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 			//markerI.bindTooltip(metadata2, {className: 'tooltip'});
 
 			markerT.on('click', function (e) {
-				console.log("START: ", e.sourceTarget.options.id);
+			//	console.log("START: ", e.sourceTarget.options.id);
 				curr_limit = (parseInt(e.sourceTarget.options.id / max_res_size) + 1) * max_res_size;
 				clearCells();
 				generateCell(results, curr_limit);
 
 				var sP = document.getElementById(`image_${e.sourceTarget.options.id}`);
 
-				console.log("Sposss: ", sP.getBoundingClientRect())
-				console.log("XX: ", image_panel.scrollTop);
+			//	console.log("Sposss: ", sP.getBoundingClientRect())
+			//	console.log("XX: ", image_panel.scrollTop);
 
 				image_panel.scrollTop += sP.getBoundingClientRect().y - 68;
 				
-				console.log("Eposss: ", sP.getBoundingClientRect())
-				console.log("XX2: ", image_panel.scrollTop);
+			//	console.log("Eposss: ", sP.getBoundingClientRect())
+			//	console.log("XX2: ", image_panel.scrollTop);
 			});
+
+		//	console.log(markerT);
 
 			markers.push(markerT);
 
@@ -439,6 +470,7 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 	console.log("added #markers:",count );
 }
 
+init();
 filter("", "", "", "", "", "", "", "");
 updatepos();
 
@@ -465,6 +497,7 @@ function zoomChange() {
 	}
 	*/
 
+	occludeActive(currLabel);
 	console.log("zoom level: ", map['_zoom']);
 	//adjustWin();
 }

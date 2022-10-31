@@ -142,7 +142,7 @@ body {
 .text_content {
     background-color:white;
     width: 400px;
-    height: 250px;
+    height: auto;
 }
 
 #title_header {
