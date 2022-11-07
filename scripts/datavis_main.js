@@ -20,7 +20,7 @@ var currLabel = null;
 
 //var searchbar = document.getElementById("search");
 var homebutton = document.getElementById("homebtn");
-var settingsBtn = document.getElementById("settingsbtn")
+var settingsBtn = document.getElementById("settingsbtn");
 // var settingsPne = document.getElementById("settingspane");
 var filtersBtn = settingsBtn;
 var filtersPne = document.getElementById("filters_norm");
@@ -45,11 +45,11 @@ var map = L.map('map', {
 	minZoom: minZoomV,
 	maxZoom: maxZoomV,
 	zoomSnap: 1,
-    maxBoundsViscosity: 1.0,
+	maxBoundsViscosity: 1.0,
 	zoomControl: false
-}).setView(homeCoords, minZoomV*2);
+}).setView(homeCoords, minZoomV * 2);
 L.control.zoom({
-    position: 'bottomright'
+	position: 'bottomright'
 }).addTo(map);
 
 map.setZoom(minZoomV);
@@ -63,45 +63,45 @@ var northEast = L.latLng(90, 200);
 var bounds = L.latLngBounds(southWest, northEast);
 
 map.setMaxBounds(bounds);
-map.on('drag', function() {
-    map.panInsideBounds(bounds, { animate: false });
+map.on('drag', function () {
+	map.panInsideBounds(bounds, { animate: false });
 });
 
 var mapSize = document.getElementById("map");
 
 var tiles = L.tileLayer(lightStyle, {}).addTo(map);
-map.attributionControl.addAttribution("<a href=\"https://www.jawg.io\" target=\"_blank\">&copy; Jawg</a> - <a href=\"https://www.openstreetmap.org\" target=\"_blank\">&copy; OpenStreetMap</a>&nbsp;contributors")
+map.attributionControl.addAttribution("<a href=\"https://www.jawg.io\" target=\"_blank\">&copy; Jawg</a> - <a href=\"https://www.openstreetmap.org\" target=\"_blank\">&copy; OpenStreetMap</a>&nbsp;contributors");
 
 if (USE_SERVER_DATA) {
-txtFile.open("GET", "https://quincyw12.github.io/research-collaboration-map1/vis_data.csv", false);
-txtFile.onload = function (e) {
-	if (txtFile.readyState === 4) {
-		if (txtFile.status === 200) {
-			var csvData = txtFile.responseText;
+	txtFile.open("GET", "https://quincyw12.github.io/research-collaboration-map1/vis_data.csv", false);
+	txtFile.onload = function (e) {
+		if (txtFile.readyState === 4) {
+			if (txtFile.status === 200) {
+				var csvData = txtFile.responseText;
 
-			parsedD = $.csv.toObjects(csvData);
-			
-			console.log("CSV Obtained successfully.")
-		} else {
-			console.error(txtFile.statusText);
+				parsedD = $.csv.toObjects(csvData);
+
+				console.log("CSV Obtained successfully.");
+			} else {
+				console.error(txtFile.statusText);
+			}
 		}
-	}
-};
-txtFile.onerror = function (e) {
-	console.error(txtFile.statusText);
-};
+	};
+	txtFile.onerror = function (e) {
+		console.error(txtFile.statusText);
+	};
 
-txtFile.send();
+	txtFile.send();
 }
 else {
-csvData = document.getElementById("csv_data").innerHTML;
-parsedD = $.csv.toObjects(csvData);
+	csvData = document.getElementById("csv_data").innerHTML;
+	parsedD = $.csv.toObjects(csvData);
 }
 
 function strToColour(str) {
-	var res = str.charCodeAt(0)
+	var res = str.charCodeAt(0);
 	for (var i = 1; i < str.length; i++) {
-		res -= str.charCodeAt(i)
+		res -= str.charCodeAt(i);
 	}
 
 	if (res < 0)
@@ -111,7 +111,7 @@ function strToColour(str) {
 }
 
 function generateColours(maxList) {
-	var colours = []
+	var colours = [];
 	for (var i = 0; i < 3; i++) {
 		for (var x = 0; x < 250; x++) {
 			for (var y = 0; y < 250; y++) {
@@ -182,7 +182,7 @@ function disableView() {
 	map.boxZoom.disable();
 	map.keyboard.disable();
 	if (map.tap) map.tap.disable();
-	document.getElementById('map').style.cursor='default';
+	document.getElementById('map').style.cursor = 'default';
 }
 
 function enableView() {
@@ -193,11 +193,11 @@ function enableView() {
 	map.boxZoom.enable();
 	map.keyboard.enable();
 	if (map.tap) map.tap.enable();
-	document.getElementById('map').style.cursor='grab';
+	document.getElementById('map').style.cursor = 'grab';
 }
 
 function isHidden(element) {
-	
+
 	if (element != null) {
 		const rect = element.getBoundingClientRect();
 		return (
@@ -213,10 +213,10 @@ function getRelativePos(currRange, units) {
 	// Then recalculate shift value
 
 
-    var inner = document.getElementsByClassName("img_collection");
+	var inner = document.getElementsByClassName("img_collection");
 
-    if (inner != null) {
-        var container = inner[0];
+	if (inner != null) {
+		var container = inner[0];
 
 		if (container != null) {
 			for (var r = currRange - units; r < currRange + units; r++) {
@@ -224,10 +224,10 @@ function getRelativePos(currRange, units) {
 				var curr = r;
 
 				if (curr < 0)
-					curr = 0
+					curr = 0;
 
 				if (curr > results.length)
-					curr = results.length - 1
+					curr = results.length - 1;
 
 				if (curr >= 0 && curr < results.length) {
 					if (curr >= 0 && curr < results.length && container.children[curr] != null)
@@ -236,7 +236,7 @@ function getRelativePos(currRange, units) {
 				}
 			}
 		}
-    }
+	}
 
 }
 
@@ -246,13 +246,14 @@ function occludeActive(currl) {
 
 function updatepos() {
 	var x = image_panel;
-	var ind = parseInt(x.scrollTop/Image_Shift);
+	var ind = parseInt(x.scrollTop / Image_Shift);
 
 	var currind = getRelativePos(ind, 12);
 	//console.log("SRL_>", x.scrollTop, x.scrollTop / Image_Shift, currind == undefined, curr_limit);
 	if (currind != prevMarker && markers.length > 0) {
 		if (prevMarker >= 0 && prevMarker < markers.length) {
-			var label = document.getElementById(`label_${prevMarker}`)
+			var label = document.getElementById(`label_${prevMarker}`);
+			console.log(`label_${prevMarker}`);
 			label.style.width = "20px";
 			label.style.height = "20px";
 			label.style.fontSize = "14px";
@@ -264,33 +265,33 @@ function updatepos() {
 
 		prevMarker = currind;
 	}
-	
+
 	if (ind != null && ind != NaN) {
 		//console.log("Currind: ", ind, currind, Image_Shift);
-		
-	if (currind >= curr_limit - 4) {
-		curr_limit += max_res_size;
-		Image_Shift = parseInt(x.scrollTop/currind)
-		clearCells();
-		generateCell(results, curr_limit);
-	}
-	else if (currind < (curr_limit - (max_res_size + 3))) {
-		curr_limit -= max_res_size;
-		parseInt(x.scrollTop / currind)
-		clearCells();
-		generateCell(results, curr_limit);
-	}
-	
-	//console.log("MMK: ", markers[ind]);
+
+		if (currind >= curr_limit - 4) {
+			curr_limit += max_res_size;
+			Image_Shift = parseInt(x.scrollTop / currind);
+			clearCells();
+			generateCell(results, curr_limit);
+		}
+		else if (currind < (curr_limit - (max_res_size + 3))) {
+			curr_limit -= max_res_size;
+			parseInt(x.scrollTop / currind);
+			clearCells();
+			generateCell(results, curr_limit);
+		}
+
+		//console.log("MMK: ", markers[ind]);
 
 		if (currind >= 0 && currind < markers.length) {
-			var label = document.getElementById(`label_${currind}`)
+			var label = document.getElementById(`label_${currind}`);
 			label.style.width = "40px";
 			label.style.height = "40px";
 			label.style.fontSize = "28px";
 			label.style.opacity = "1";
 			label.style.zIndex = "10000";
-		//	document.getElementById(`label_${currind}`).style = "text-align:center;color: white;background-color: #660099;width: 40px;height: 40px;border-radius: 30px; font-size: 28px;";
+			//	document.getElementById(`label_${currind}`).style = "text-align:center;color: white;background-color: #660099;width: 40px;height: 40px;border-radius: 30px; font-size: 28px;";
 			//console.log("LX", markers[currind].getElement());
 
 			currLabel = label;
@@ -299,87 +300,85 @@ function updatepos() {
 
 		}
 	}
-	
+
 }
 
 function clearCells() {
-    var inner = document.getElementsByClassName("img_collection");
+	var inner = document.getElementsByClassName("img_collection");
 
-    if (inner != null) {
-        var container = inner[0];
+	if (inner != null) {
+		var container = inner[0];
 
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
-        }
+		while (container.firstChild) {
+			container.removeChild(container.firstChild);
+		}
 
-    }
-	
+	}
+
 	console.log("cleared/");
 }
 
 function checkIfImageExists(url, callback) {
-    const img = new Image();
-    img.src = url;
+	const img = new Image();
+	img.src = url;
 
-    if (img.complete) {
-      callback(true);
-    } else {
-      img.onload = () => {
-        callback(true);
-      };
-      
-      img.onerror = () => {
-        callback(false);
-      };
-    }
-  }
-  
+	if (img.complete) {
+		callback(true);
+	} else {
+		img.onload = () => {
+			callback(true);
+		};
+
+		img.onerror = () => {
+			callback(false);
+		};
+	}
+}
+
 function loadDefault(element_id) {
 	var image_n = document.getElementById(element_id);
 
 	image_n.src = "icons/placeholder.png";
 
-	console.log("ERRO!")
-  }
+	console.log("ERRO!");
+}
 
 function generateCell(res, max_size) {
 
-    var inner = document.getElementsByClassName("img_collection");
-    //console.log("res: ", res);
+	var inner = document.getElementsByClassName("img_collection");
+	//console.log("res: ", res);
 	var newNode = null;
-	for (var i=0;i<res.length;i++) {
-    if (inner != null && res != null && i < max_size) { 
+	for (var i = 0; i < res.length; i++) {
+		if (inner != null && res != null && i < max_size) {
 
-        var container = inner[0];
-        
-		//console.log("res1: ", res[i].Project)
-		var filler = `<div id="filler" style="width: 100px; height: 100px;"></div>`;
-		
-		var imageD = res[i].Image_URL;
-		const rgbV = colours[strToColour(res[i].Project) % colours.length];
+			var container = inner[0];
 
-		var html = `<div class="img_header">
+			//console.log("res1: ", res[i].Project)
+			var filler = `<div id="filler" style="width: 100px; height: 100px;"></div>`;
+
+			var imageD = res[i].Image_URL;
+			const rgbV = colours[strToColour(res[i].Project) % colours.length];
+
+			var html = `<div class="img_header">
 							<div id="circle_base" style="text-align: center;">
 								<div id="circle" style="color: white; background-color: rgba(${rgbV[0]}, ${rgbV[1]}, ${rgbV[2]}, 1); opacity: 1; border-radius: 40px; width: 25px; height: 25px;">${i + 1}</div>
 							</div>
-                            <input type="image" id="image_${i}" style="width: 100%; height: 100%;" src="${imageD}" onerror="loadDefault("image_${i}")"/>
+                            <input type="image" id="image_${i}" style="width: 100%; height: 100%;" src="${imageD}" onerror="loadDefault('image_${i}')"/>
 							<div class="text_content">
                                 <div id="title_header" style="padding:6px; width: 90%;">${res[i].Project}</div>
                                 <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].Funder} - ${res[i]["Funding period"]}</div>
                                 <div id="organization_bdy" style="padding:6px; width: 90%;">${res[i].PI} (PI) - ${res[i]["Research Sites"]}</div>
 								<div id="organization_bdy" style="padding:6px; width: 90%;">${res[i]["Co-PI(s)"]} (Co-PI) - ${res[i]["Research Sites"]}</div>
                             </div>
-                        </div>
-
-		`
-
-        var newNode = document.createRange().createContextualFragment(html);
-        container.appendChild(newNode);
-	    }
+                        </div>`;
+            // console.log(html);
+			newNode = document.createRange().createContextualFragment(html);
+			container.appendChild(newNode);
+		}
 	}
 
 	if (newNode != null) {
-		var newNode = document.createRange().createContextualFragment(filler);
+		newNode = document.createRange().createContextualFragment(filler);
 		container.appendChild(newNode);
 	}
 
@@ -400,39 +399,37 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 
 	for (var i = 0; i < parsedD.length; i++) {
 
-		var Project = parsedD[i].Project?.trim()??"";
-		var PIs = parsedD[i].PI?.trim()??"";
-		var CoPIs = parsedD[i]["Co-PI(s)"]?.trim()??""
-		var Collabs = parsedD[i]["Collaborators\n(not funders)"]?.trim()??"";
-		var Funder = parsedD[i].Funder?.trim()??"";
-		var TimePeriod = parsedD[i]["Funding period"]?.trim()??"";
-		var keywords = parsedD[i]["Research keywords"]?.trim()??"";
-		var site = parsedD[i]["Research Sites"]?.trim()??"";
-		var coordsLat = parsedD[i].latitude.trim()??"";
-		var coordsLong = parsedD[i].longitude.trim()??"";
-		
+		var Project = parsedD[i].Project?.trim() ?? "";
+		var PIs = parsedD[i].PI?.trim() ?? "";
+		var CoPIs = parsedD[i]["Co-PI(s)"]?.trim() ?? "";
+		var Collabs = parsedD[i]["Collaborators\n(not funders)"]?.trim() ?? "";
+		var Funder = parsedD[i].Funder?.trim() ?? "";
+		var TimePeriod = parsedD[i]["Funding period"]?.trim() ?? "";
+		var keywords = parsedD[i]["Research keywords"]?.trim() ?? "";
+		var site = parsedD[i]["Research Sites"]?.trim() ?? "";
+		var coordsLat = parsedD[i].latitude.trim() ?? "";
+		var coordsLong = parsedD[i].longitude.trim() ?? "";
 
-		if (Project.toLowerCase().includes(projectName?.toLowerCase()) && 
-		    site.toLowerCase().includes(researchNames?.toLowerCase()) && 
-			PIs.toLowerCase().includes(piNames?.toLowerCase()) && 
-			CoPIs.toLowerCase().includes(copiNames?.toLowerCase()) && 
+
+		if (Project.toLowerCase().includes(projectName?.toLowerCase()) &&
+			site.toLowerCase().includes(researchNames?.toLowerCase()) &&
+			PIs.toLowerCase().includes(piNames?.toLowerCase()) &&
+			CoPIs.toLowerCase().includes(copiNames?.toLowerCase()) &&
 			Collabs.toLowerCase().includes(collabNames?.toLowerCase()) &&
-			Funder.toLowerCase().includes(funderName?.toLowerCase()) && 
-			TimePeriod.toLowerCase().includes(timePeriod?.toLowerCase()) && 
-			keywords.toLowerCase().includes(keywordList?.toLowerCase())) 
-		{
+			Funder.toLowerCase().includes(funderName?.toLowerCase()) &&
+			TimePeriod.toLowerCase().includes(timePeriod?.toLowerCase()) &&
+			keywords.toLowerCase().includes(keywordList?.toLowerCase())) {
 
 			var colourV = strToColour(Project);
 
 			colourV = colourV % colours.length;
 
-		//	console.log("CLR: ", colours[colourV]);
+			//	console.log("CLR: ", colours[colourV]);
 
-			var labelTxt = L.divIcon({ className: 'my-div-icon', html: `<div id="label_${count}" style="text-align:center;color:white; opacity: 0.8; background-color: rgba(${colours[colourV][0]},${colours[colourV][1]},${colours[colourV][2]},0.8);width: 20px;height: 20px;border-radius: 30px; font-size: 14px;">${count + 1}</div>` });
-			
-			
-			const markerT = L.marker([parsedD[count].latitude, parsedD[count].longitude], {
-				icon: labelTxt, id: count
+			var labelTxt = L.divIcon({ className: 'my-div-icon', html: `<div id="label_${count}" style="text-align:center;color:white; opacity: 0.8; background-color: rgba(${colours[colourV][0]},${colours[colourV][1]},${colours[colourV][2]},0.8);width: 20px;height: 20px;border-radius: 30px; font-size: 14px;">${++count}</div>` });
+
+			const markerT = L.marker([parsedD[i].latitude, parsedD[i].longitude], {
+				icon: labelTxt, id: count - 1
 			}).addTo(map);
 
 			//	console.log("===>", Project, PIs, CoPIs, Collabs);
@@ -442,32 +439,33 @@ function filter(projectName, researchNames, piNames, copiNames, collabNames, fun
 			//markerI.bindTooltip(metadata2, {className: 'tooltip'});
 
 			markerT.on('click', function (e) {
-			//	console.log("START: ", e.sourceTarget.options.id);
+				//	console.log("START: ", e.sourceTarget.options.id);
 				curr_limit = (parseInt(e.sourceTarget.options.id / max_res_size) + 1) * max_res_size;
 				clearCells();
 				generateCell(results, curr_limit);
 
 				var sP = document.getElementById(`image_${e.sourceTarget.options.id}`);
 
-			//	console.log("Sposss: ", sP.getBoundingClientRect())
-			//	console.log("XX: ", image_panel.scrollTop);
+				//	console.log("Sposss: ", sP.getBoundingClientRect())
+				//	console.log("XX: ", image_panel.scrollTop);
 
 				image_panel.scrollTop += sP.getBoundingClientRect().y - 68;
-				
-			//	console.log("Eposss: ", sP.getBoundingClientRect())
-			//	console.log("XX2: ", image_panel.scrollTop);
+
+				//	console.log("Eposss: ", sP.getBoundingClientRect())
+				//	console.log("XX2: ", image_panel.scrollTop);
 			});
 
-		//	console.log(markerT);
+			//	console.log(markerT);
 
 			markers.push(markerT);
 
-			results.push(parsedD[count++]);
+			results.push(parsedD[i]);
+			
 		}
 	}
 
-    generateCell(results, max_res_size);
-	console.log("added #markers:",count );
+	generateCell(results, max_res_size);
+	console.log("added #markers:", count);
 }
 
 init();
@@ -480,12 +478,12 @@ function changeTileType(tileURL) {
 
 function zoomChange() {
 	if (infoPanel.style.display != 'none') {
-		infoPanel.style.display = "none";	
+		infoPanel.style.display = "none";
 	}
-    
+
 	// Tooltip only
 	document.querySelectorAll(".leaflet-tooltip-pane").forEach(a => a.style.display = "block");
-    // or mix of popup and tooltip
+	// or mix of popup and tooltip
 	/* if (map['_zoom'] < 10 ) {
 		//document.getElementsByTagName("STYLE").display = "none";
 		//document.className("tooltioWin").style("display") = "none";
@@ -497,8 +495,8 @@ function zoomChange() {
 	}
 	*/
 
-	occludeActive(currLabel);
-	console.log("zoom level: ", map['_zoom']);
+	// occludeActive(currLabel);
+	console.log("zoom level: ", map._zoom);
 	//adjustWin();
 }
 
@@ -532,7 +530,7 @@ homebutton.addEventListener('click', function (clicked) {
 	map.setZoom(minZoomV);
 	map.setView(homeCoords, minZoomV);
 	console.log("click");
-    //adjustWin();
+	//adjustWin();
 });
 
 homebutton.addEventListener('mouseup', function (clicked) {
@@ -547,7 +545,7 @@ settingsBtn.addEventListener('mouseup', function (clicked) {
 	settingsBtn.style.transform = "scale(1,1)";
 });
 
-map.on('zoomend', zoomChange)
+map.on('zoomend', zoomChange);
 
 window.addEventListener('resize', function (meta) {
 	if (FiltersActive) {
@@ -583,15 +581,15 @@ filtersBtn.addEventListener('click', function (clicked) {
 
 		var container1 = document.getElementById("filters_norm");
 		var inputs = container1.getElementsByTagName('input');
-    	for (var index = 0; index < inputs.length; ++index) {
-        	inputs[index].value = '';
-    	}
+		for (var index = 0; index < inputs.length; ++index) {
+			inputs[index].value = '';
+		}
 
 		var container2 = document.getElementById("filters_pc");
-		var inputs = container2.getElementsByTagName('input');
-    	for (var index = 0; index < inputs.length; ++index) {
-        	inputs[index].value = '';
-    	}
+		inputs = container2.getElementsByTagName('input');
+		for (var i = 0; i < inputs.length; ++i) {
+			inputs[i].value = '';
+		}
 	}
 	else {
 		filtersPC.style.display = "none";
@@ -620,15 +618,15 @@ function restorePreviousView() {
 
 		// var container1 = document.getElementById("filters_norm");
 		// var inputs = container1.getElementsByTagName('input');
-    	// for (var index = 0; index < inputs.length; ++index) {
-        // 	inputs[index].value = '';
-    	// }
+		// for (var index = 0; index < inputs.length; ++index) {
+		// 	inputs[index].value = '';
+		// }
 
 		// var container2 = document.getElementById("filters_pc");
 		// var inputs = container2.getElementsByTagName('input');
-    	// for (var index = 0; index < inputs.length; ++index) {
-        // 	inputs[index].value = '';
-    	// }
+		// for (var index = 0; index < inputs.length; ++index) {
+		// 	inputs[index].value = '';
+		// }
 	}
 	else {
 		filtersPC.style.display = "none";
@@ -652,7 +650,7 @@ function failure() {
 	sw_Location.checked = false;
 }
 
-console.log(window.innerHeight*0.75);
+console.log(window.innerHeight * 0.75);
 
 console.log("main");
 //adjustWin();
