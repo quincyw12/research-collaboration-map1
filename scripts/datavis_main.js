@@ -4,7 +4,10 @@
 const USE_SERVER_DATA = true;
 var Image_Shift = 453;
 //var homeCoords = [52.476089, -50.825867];
-var homeCoords = [52.476089, -87.276242];
+// World centred 
+// var homeCoords = [52.476089, -87.276242];
+
+var homeCoords = [49.2787096,-122.918803];
 
 var txtFile = new XMLHttpRequest();
 var parsedD = {};
@@ -47,12 +50,13 @@ var map = L.map('map', {
 	zoomSnap: 1,
 	maxBoundsViscosity: 1.0,
 	zoomControl: false
-}).setView(homeCoords, minZoomV * 2);
+}).setView(homeCoords, minZoomV+7);
 L.control.zoom({
 	position: 'bottomright'
 }).addTo(map);
 
-map.setZoom(minZoomV);
+map.setZoom(minZoomV+7);
+homebutton.click();
 
 //var southWest = L.latLng(-89.98155760646617, -179); 
 //var northEast = L.latLng(89.99346179538875, 180);
@@ -527,8 +531,8 @@ homebutton.addEventListener('mousedown', function (clicked) {
 });
 
 homebutton.addEventListener('click', function (clicked) {
-	map.setZoom(minZoomV);
-	map.setView(homeCoords, minZoomV);
+	map.setZoom(minZoomV+7);
+	map.setView(homeCoords, minZoomV+7);
 	console.log("click");
 	//adjustWin();
 });
@@ -654,6 +658,8 @@ console.log(window.innerHeight * 0.75);
 
 console.log("main");
 //adjustWin();
+
+homebutton.click();
 
 //navigate(redirectGMapNav, coordsToStr(homeCoords), 'Port Coquitlam')
 
