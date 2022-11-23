@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet"
+          href="stylesheets/styles.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+          integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+          crossorigin="" />
+
+    <link rel="stylesheet" href="stylesheets/additional_styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .ui-draggable, .ui-droppable {
+            background-position: top;
+        }
+        .ui-autocomplete {
+          max-height: 200px;
+          overflow-y: auto;
+          /* prevent horizontal scrollbar */
+          overflow: auto;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          margin-right:8px;
+          margin-bottom: 8px;
+          border-style: outset;
+        }
+        li.ui-menu-item {
+            overflow-wrap: normal;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+        /* IE 6 doesn't support max-height
+         * we use height instead, but this forces the menu to always be this tall
+         */
+        * html .ui-autocomplete {
+          height: 100px;
+        }
+    </style>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+            integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+            crossorigin=""></script>
+   
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.js" integrity="sha256-fNXJFIlca05BIO2Y5zh1xrShK3ME+/lYZ0j+ChxX2DA=" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <script src="scripts/jquery.csv.js"></script>
+
+</head>
+<body>
+    <section class="main_view">
+
+        <div class="Filters_Pane" id="filters_norm">
+            <div class="f_header">
+                Filter Options
+
+                <input type="text" class="filter_input" id="filter_search" placeholder="Project Name" style="width:93%;padding:5px;text-align:left;" hidden />
+                <input type="text" class="filter_input" id="filter_site" placeholder="Research Sites" style="width: 93%; padding: 5px; text-align: left;" />
+                <div class="pi_section">
+                    <input type="text" class="filter_input" id="filter_pi_main" placeholder="Principle Investigator" style="width: 50%; padding: 5px; text-align: left;" />
+                    <input type="text" class="filter_input" id="filter_pi_sub" placeholder="Co-PIs" style="width: 38%; padding: 5px; text-align: left;" />
+                </div>
+                <input type="text" class="filter_input" id="filter_colabs" placeholder="Collaborators" style="width: 93%; padding: 5px; text-align: left;" hidden />
+                <div class="fund_section">
+                    <input type="text" class="filter_input" id="filter_fun_main" placeholder="Funder" style="width: 50%; padding: 5px; text-align: left;" />
+                    <input type="text" class="filter_input" id="filter_fun_time" placeholder="Period" style="width: 38%; padding: 5px; text-align: left;" />
+                </div>
+                <input type="text" class="filter_input" id="filter_keywords" placeholder="Keywords" style="width: 93%; padding: 5px; text-align: left;" hidden />
+            </div>
+        </div>
+
+        <section class="Map_interface">
+
+            <section class="map_container">
+
+                <div class="map_container" id="items_main">
+                    <div class="Filters_Pane" id="items_main2">
+                        <div class="f_header">
+                            <div class="main_header" style="text-align:center;">
+                                <name>Research Facility</name>
+                            </div>
+
+                            <section class="data_header" id="data_header">
+
+                                <header id="rname" style="font-size:large; text-align:center;">Storied lives: An impact study of COVID-19 on seniors and their community support services</header>
+                                <div id="pi_section" style="text-align:center;">
+                                    <div id="PI_field" style="padding:3px;">
+                                        <div class="research_details">Alf Coles (University of Bristol) and Kate Le Roux (University of Cape Town, SA)</div>
+                                    </div>
+                                    <div id="Co_PI_field" style="padding:3px;">
+                                        <div class="research_details">Nathalie Sinclair, Elizabeth de Freitas, Armando Solares, Oi-Lam Ng, Sally Wai-yan Wan, Tracy Hellwell, Julian Brown, Mark Boylan, Elaine Simmt, Stephanie La France</div>
+                                    </div>
+                                </div>
+
+                                <div id="collab_field" style="padding:3px;">
+                                    <div class="research_details">Sandy Banks (SFU)</div>
+                                </div>
+
+                                <div id="fund_section" style="text-align:center;">
+                                    <div id="funder_main" style="padding:2px; display:inline-block; width:43%;">
+                                        <div class="research_details">Funder</div>
+                                    </div>
+                                    <div id="funder_period" style="padding: 2px;display:inline-block; width: 43%;">
+                                        <div class="research_details">Period</div>
+                                    </div>
+                                </div>
+
+                                <div id="poi_keywords" style="padding: 3px; display: block;">
+                                    <div class="research_details">Keywords</div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map" id="map">
+                    <div class="Settings_Pane">
+                        <input type="image" src="icons/home-icon.png" id="homebtn">
+                        <input type="image" src="icons/search-icon.png" id="settingsbtn">
+
+                        <section id="options_meta" style="width:106%; display:flex; z-index:1000;">
+
+                            <div class="map_container" id="filters_pc">
+                                <div class="Filters_Pane">
+                                    <div class="f_header">
+                                        Filter Options
+
+                                        <input type="text" class="filter_input" id="filter_search" placeholder="Project Name" style="width:93%;padding:5px;text-align:left;" hidden />
+                                        <input type="text" class="filter_input" id="filter_site" placeholder="Research Sites" style="width: 93%; padding: 5px; text-align: left;" />
+                                        <div class="pi_section">
+                                            <input type="text" class="filter_input" id="filter_pi_main" maxlength="140" placeholder="Principle Investigator" style="width: 94%; padding: 5px; text-align: left;" />
+                                            <input type="text" class="filter_input" id="filter_pi_sub" placeholder="Co-PIs" style="width: 93%; padding: 5px; text-align: left;" />
+                                        </div>
+                                        <input type="text" class="filter_input" id="filter_colabs" placeholder="Collaborators" style="width: 93%; padding: 5px; text-align: left;" hidden />
+                                        <div class="fund_section">
+                                            <input type="text" class="filter_input" id="filter_fun_main" placeholder="Funder" style="width: 93%; padding: 5px; text-align: left;" />
+                                            <input type="text" class="filter_input" id="filter_fun_time" placeholder="Period" style="width: 93%; padding: 5px; text-align: left;" />
+                                        </div>
+                                        <input type="text" class="filter_input" id="filter_keywords" placeholder="Keywords" style="width: 93%; padding: 5px; text-align: left;" hidden />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    <div class="img_col_header" id="image_display" style="height: 85vh; width: 400px; position: relative; top: 22px; right: -13px; z-index: 1000; overflow-y:scroll; overflow-x:hidden;" onmouseover="disableView()" onmouseout="enableView()" onscroll="updatepos()">
+                        <div class="img_collection">
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </section>
+
+    <div id="csv_data" hidden>"latitude","longitude","Research Sites","Project","PI","Co-PI(s)","Collaborators(not funders)","Research keywords","Funding period","Funder"
+        49.276449,-122.918223,"Vancouver, BC (Burnaby, Vancouver, Coquitlam School Districts)",Gestural Arithmetic: Introducing Early Multiplicative Thinking Using Mobile Technology,Nathalie Sinclair,Sean Chorney,Sandy Bakos (SFU); Canan Gunes (SFU),Design-based research; qualitative research into teachers use of technology; qualitative research into students learning; video-based ethnographic research; theory generation,2018,"SSHRC (Insight)"
+        51.457458,-2.60488,"University of Bristol, UK",Mathematics Curriculum in Times of Change: Towards Local and Global Relevance,"Alf Coles (University of Bristol) and Kate Le Roux (University of Cape Town, SA)","Nathalie Sinclair, Elizabeth de Freitas, Armando Solares, Oi-Lam Ng, Sally Wai-yan Wan, Tracy Hellwell, Julian Brown, Mark Boylan, Elaine Simmt, Stephanie La France","University of Bristol; University of Alberta; Chinese University of Hong Kong; University of Cape Town; CINVESTAV, Mexico; Manchester Metropolitan University; SFU; Sheffield Hallam University",Diagramming experiments; Philosophy,2019,World Universities Network (WUN)
+        49.761953,-113.063722,"University of Alberta, Canada",Mathematics Curriculum in Times of Change: Towards Local and Global Relevance,"Alf Coles (University of Bristol) and Kate Le Roux (University of Cape Town, SA)","Nathalie Sinclair, Elizabeth de Freitas, Armando Solares, Oi-Lam Ng, Sally Wai-yan Wan, Tracy Hellwell, Julian Brown, Mark Boylan, Elaine Simmt, Stephanie La France","University of Bristol; University of Alberta; Chinese University of Hong Kong; University of Cape Town; CINVESTAV, Mexico; Manchester Metropolitan University; SFU; Sheffield Hallam University",Diagramming experiments; Philosophy,2019,World Universities Network (WUN)
+        22.28215,114.15688,"Chinese University of Hong Kong, HK",Mathematics Curriculum in Times of Change: Towards Local and Global Relevance,"Alf Coles (University of Bristol) and Kate Le Roux (University of Cape Town, SA)","Nathalie Sinclair, Elizabeth de Freitas, Armando Solares, Oi-Lam Ng, Sally Wai-yan Wan, Tracy Hellwell, Julian Brown, Mark Boylan, Elaine Simmt, Stephanie La France","University of Bristol; University of Alberta; Chinese University of Hong Kong; University of Cape Town; CINVESTAV, Mexico; Manchester Metropolitan University; SFU; Sheffield Hallam University",Diagramming experiments; Philosophy,2019,World Universities Network (WUN)
+        -33.9680556,18.4877778,"University of Cape Town, SA",Mathematics Curriculum in Times of Change: Towards Local and Global Relevance,"Alf Coles (University of Bristol) and Kate Le Roux (University of Cape Town, SA)","Nathalie Sinclair, Elizabeth de Freitas, Armando Solares, Oi-Lam Ng, Sally Wai-yan Wan, Tracy Hellwell, Julian Brown, Mark Boylan, Elaine Simmt, Stephanie La France","University of Bristol; University of Alberta; Chinese University of Hong Kong; University of Cape Town; CINVESTAV, Mexico; Manchester Metropolitan University; SFU; Sheffield Hallam University",Diagramming experiments; Philosophy,2019,World Universities Network (WUN)
+        45.0677551,7.6824892,"Torino, Italy",Tangible Mathematics Learning,Nathalie Sinclair,,Nicholas Jackiw,Design-based research; qualitative research into teachers' use of technology; qualitative research into students' learning; video-based ethnographic research; theory generation,2016,Canada Research Chair/Canada Foundation for Innovation
+        43.7159395,10.4018624,"Pisa, Italy",Tangible Mathematics Learning,Nathalie Sinclair,,Nicholas Jackiw,Design-based research; qualitative research into teachers' use of technology; qualitative research into students' learning; video-based ethnographic research; theory generation,2016,Canada Research Chair/Canada Foundation for Innovation
+        51.4538022,-2.5972985,"Bristol, UK",Tangible Mathematics Learning,Nathalie Sinclair,,Nicholas Jackiw,Design-based research; qualitative research into teachers' use of technology; qualitative research into students' learning; video-based ethnographic research; theory generation,2016,Canada Research Chair/Canada Foundation for Innovation
+        52.4009309,13.0591397,"Potsdam, Germany",Tangible Mathematics Learning,Nathalie Sinclair,,Nicholas Jackiw,Design-based research; qualitative research into teachers' use of technology; qualitative research into students' learning; video-based ethnographic research; theory generation,2016,Canada Research Chair/Canada Foundation for Innovation
+        49.261872,-123.114952,"Vancouver, BC, Canada",Tangible Mathematics Learning,Nathalie Sinclair,,Nicholas Jackiw,Design-based research; qualitative research into teachers' use of technology; qualitative research into students' learning; video-based ethnographic research; theory generation,2016,Canada Research Chair/Canada Foundation for Innovation
+        49.260872,-123.113952,"Vancouver, BC, Canada",Investigating Technology Exclusions and Innovations Among Newcomer Communities During COVID-19,Suzanne Smythe,Nathalie Sinclair,"Amea Wilbur, Marcela Mancilla-Fuller, Sherry Breshears","Content analysis (gathering data on how different migrant organizations are sending out information related to covid and vaccinations), interviews with frontline settlement workers",2020,SFU/SSHRC (Small Research Grant)
+        49.2557497,-123.0050395,"4445 Norfolk Street, Burnaby",Investigating Technology Exclusions and Innovations Among Newcomer Communities During COVID-19,Suzanne Smythe,Nathalie Sinclair,"Amea Wilbur, Marcela Mancilla-Fuller, Sherry Breshears","Content analysis (gathering data on how different migrant organizations are sending out information related to covid and vaccinations), interviews with frontline settlement workers",2020,SFU/SSHRC (Small Research Grant)
+        49.2767096,-122.917803,SFU Burnaby ,"Design, Development and Integration of Mobile Technologies for Primary School Education",Nathalie Sinclair,"Sophie Soury-Lavergne  (University of Lyon, France)",,Task design using technology,2019,French Embassy in Canada (Mourou/Strickland 2019 mobility programme)
+        45.74846,4.84671,"University of Lyon, France","Design, Development and Integration of Mobile Technologies for Primary School Education",Nathalie Sinclair,"Sophie Soury-Lavergne  (University of Lyon, France)",,Task design using technology,2019,French Embassy in Canada (Mourou/Strickland 2019 mobility programme)
+        49.2767096,-122.917803,"Simon Fraser University, Burnaby",Using Emergent Technologies to Develop Mathematical Objects- and Actions-to-Think-with,Brent Davis (University of Calgary),"Nathalie Sinclair, Catherine D. Bruce (Trent University), Krista R. Francis (University of Calgary)",,Technology and task design; classroom-based ethnography research; theory generation,2019,SSHRC (Insight)
+        44.3572933,-78.2893817,Trent University,Using Emergent Technologies to Develop Mathematical Objects- and Actions-to-Think-with,Brent Davis (University of Calgary),"Nathalie Sinclair, Catherine D. Bruce (Trent University), Krista R. Francis (University of Calgary)",,Technology and task design; classroom-based ethnography research; theory generation,2019,SSHRC (Insight)
+        51.0783651,-114.1283072,University of Calgary,Using Emergent Technologies to Develop Mathematical Objects- and Actions-to-Think-with,Brent Davis (University of Calgary),"Nathalie Sinclair, Catherine D. Bruce (Trent University), Krista R. Francis (University of Calgary)",,Technology and task design; classroom-based ethnography research; theory generation,2019,SSHRC (Insight)
+        49.27990849,-122.91579522,"Simon Fraser University, Burnaby",Computational Thinking in Mathematics Education,George Gadanidis (Western University),"Nathalie Sinclair, Chantal Buteau (Brock University), Steven Khan (Brock University), Donna Kotsopoulos (Wilfred Laurier University), Miroslav Lovric (McMaster University), Ami Mamolo (University of Ontario Institute of Technology), Immaculate Namukasa (Western University), Peter Taylor (Queen’s University)","Rosa Cendros (Project Manager), Erin Clements (Western University), Lisa Floyd (Western University), Jordan Lenjosec (Western University), Chris Yiu (Western University). 
+        Partnership with institutions and organizations including Centre for Mathematics Education @ The Fields Institute, The Fields Institute for Research in Mathematical Sciences, Huron Perth Catholic District School Board",Technology and task design; classroom-based ethnography research,2016,SSHRC (Partnership Development Grant); the Fields Institute for Research in Mathematical Sciences
+        32.7139413,-117.0372503,Western University,Computational Thinking in Mathematics Education,George Gadanidis (Western University),"Nathalie Sinclair, Chantal Buteau (Brock University), Steven Khan (Brock University), Donna Kotsopoulos (Wilfred Laurier University), Miroslav Lovric (McMaster University), Ami Mamolo (University of Ontario Institute of Technology), Immaculate Namukasa (Western University), Peter Taylor (Queen’s University)","Rosa Cendros (Project Manager), Erin Clements (Western University), Lisa Floyd (Western University), Jordan Lenjosec (Western University), Chris Yiu (Western University). 
+        Partnership with institutions and organizations including Centre for Mathematics Education @ The Fields Institute, The Fields Institute for Research in Mathematical Sciences, Huron Perth Catholic District School Board",Technology and task design; classroom-based ethnography research,2016,SSHRC (Partnership Development Grant); the Fields Institute for Research in Mathematical Sciences
+        43.1177334,-79.2498568,Brock University,Computational Thinking in Mathematics Education,George Gadanidis (Western University),"Nathalie Sinclair, Chantal Buteau (Brock University), Steven Khan (Brock University), Donna Kotsopoulos (Wilfred Laurier University), Miroslav Lovric (McMaster University), Ami Mamolo (University of Ontario Institute of Technology), Immaculate Namukasa (Western University), Peter Taylor (Queen’s University)","Rosa Cendros (Project Manager), Erin Clements (Western University), Lisa Floyd (Western University), Jordan Lenjosec (Western University), Chris Yiu (Western University). 
+        Partnership with institutions and organizations including Centre for Mathematics Education @ The Fields Institute, The Fields Institute for Research in Mathematical Sciences, Huron Perth Catholic District School Board",Technology and task design; classroom-based ethnography research,2016,SSHRC (Partnership Development Grant); the Fields Institute for Research in Mathematical Sciences
+        44.2263472,-76.4957393,Queen's University,Computational Thinking in Mathematics Education,George Gadanidis (Western University),"Nathalie Sinclair, Chantal Buteau (Brock University), Steven Khan (Brock University), Donna Kotsopoulos (Wilfred Laurier University), Miroslav Lovric (McMaster University), Ami Mamolo (University of Ontario Institute of Technology), Immaculate Namukasa (Western University), Peter Taylor (Queen’s University)","Rosa Cendros (Project Manager), Erin Clements (Western University), Lisa Floyd (Western University), Jordan Lenjosec (Western University), Chris Yiu (Western University). 
+        Partnership with institutions and organizations including Centre for Mathematics Education @ The Fields Institute, The Fields Institute for Research in Mathematical Sciences, Huron Perth Catholic District School Board",Technology and task design; classroom-based ethnography research,2016,SSHRC (Partnership Development Grant); the Fields Institute for Research in Mathematical Sciences
+        43.6682116,-79.3984995,"University of Toronto, OISE",Computational Thinking in Mathematics Education,George Gadanidis (Western University),"Nathalie Sinclair, Chantal Buteau (Brock University), Steven Khan (Brock University), Donna Kotsopoulos (Wilfred Laurier University), Miroslav Lovric (McMaster University), Ami Mamolo (University of Ontario Institute of Technology), Immaculate Namukasa (Western University), Peter Taylor (Queen’s University)","Rosa Cendros (Project Manager), Erin Clements (Western University), Lisa Floyd (Western University), Jordan Lenjosec (Western University), Chris Yiu (Western University). 
+        Partnership with institutions and organizations including Centre for Mathematics Education @ The Fields Institute, The Fields Institute for Research in Mathematical Sciences, Huron Perth Catholic District School Board",Technology and task design; classroom-based ethnography research,2016,SSHRC (Partnership Development Grant); the Fields Institute for Research in Mathematical Sciences
+        43.2639397,-79.9178252,McMaster University,Computational Thinking in Mathematics Education,George Gadanidis (Western University),"Nathalie Sinclair, Chantal Buteau (Brock University), Steven Khan (Brock University), Donna Kotsopoulos (Wilfred Laurier University), Miroslav Lovric (McMaster University), Ami Mamolo (University of Ontario Institute of Technology), Immaculate Namukasa (Western University), Peter Taylor (Queen’s University)","Rosa Cendros (Project Manager), Erin Clements (Western University), Lisa Floyd (Western University), Jordan Lenjosec (Western University), Chris Yiu (Western University). 
+        Partnership with institutions and organizations including Centre for Mathematics Education @ The Fields Institute, The Fields Institute for Research in Mathematical Sciences, Huron Perth Catholic District School Board",Technology and task design; classroom-based ethnography research,2016,SSHRC (Partnership Development Grant); the Fields Institute for Research in Mathematical Sciences
+        43.4727989,-80.5280863,Wilfrid Laurier University,Computational Thinking in Mathematics Education,George Gadanidis (Western University),"Nathalie Sinclair, Chantal Buteau (Brock University), Steven Khan (Brock University), Donna Kotsopoulos (Wilfred Laurier University), Miroslav Lovric (McMaster University), Ami Mamolo (University of Ontario Institute of Technology), Immaculate Namukasa (Western University), Peter Taylor (Queen’s University)","Rosa Cendros (Project Manager), Erin Clements (Western University), Lisa Floyd (Western University), Jordan Lenjosec (Western University), Chris Yiu (Western University). 
+        Partnership with institutions and organizations including Centre for Mathematics Education @ The Fields Institute, The Fields Institute for Research in Mathematical Sciences, Huron Perth Catholic District School Board",Technology and task design; classroom-based ethnography research,2016,SSHRC (Partnership Development Grant); the Fields Institute for Research in Mathematical Sciences
+        43.9483311,-78.8981668,University of Ontario Institute of Technology,Computational Thinking in Mathematics Education,George Gadanidis (Western University),"Nathalie Sinclair, Chantal Buteau (Brock University), Steven Khan (Brock University), Donna Kotsopoulos (Wilfred Laurier University), Miroslav Lovric (McMaster University), Ami Mamolo (University of Ontario Institute of Technology), Immaculate Namukasa (Western University), Peter Taylor (Queen’s University)","Rosa Cendros (Project Manager), Erin Clements (Western University), Lisa Floyd (Western University), Jordan Lenjosec (Western University), Chris Yiu (Western University). 
+        Partnership with institutions and organizations including Centre for Mathematics Education @ The Fields Institute, The Fields Institute for Research in Mathematical Sciences, Huron Perth Catholic District School Board",Technology and task design; classroom-based ethnography research,2016,SSHRC (Partnership Development Grant); the Fields Institute for Research in Mathematical Sciences
+        49.2787096,-122.918803,SFU,"The new literacies of automation: pedagogies, theories and possibilities",Suzanne Smythe,Nathalie Sinclair (SFU),Nathalie Sinclair (SFU); Rajeeta Samala (Burnaby Neighbourhood House),Digital Literacy; Algorithms; Automated Inequality; Disinformation; Community-based Education,2020,SSHRC (Inight)
+        49.225334,-123.003896,Burnaby Neighbourhood House,"The new literacies of automation: pedagogies, theories and possibilities",Suzanne Smythe,Nathalie Sinclair (SFU),Nathalie Sinclair (SFU); Rajeeta Samala (Burnaby Neighbourhood House),Digital Literacy; Algorithms; Automated Inequality; Disinformation; Community-based Education,2020,SSHRC (Inight)
+        49.10635,-122.82509,"Surrey, BC","""For the next seven generations"": (re-)Creating an Indigenous women's urban leadership framework.",Michelle Pidgeon,,Rebecca Cox (SFU),"Indigenous Leadership; Indigenous Women; Community-Based Research; Community-University
+        Partnership",2021,SSHRC (Partnership Engage Grant)
+        47.2286086,65.2093197,Kazakhstan,"Pathways to education: an international study to understand the educational experiences of refugee
+        children with dis/abilities",Robert Williamson,Daniel Leitch (U of Wisconsin-Platteville); Frederic Bemak (George Mason); Susan Barber (SFU); Minami Masahiro (SFU); ,Inna Stepaniuk (SFU); Samson Nashon (UBC); Clinton Smith (U of Tennessee at Martin),refugee children with dis/abilities; inclusive education; refugee studies; refugee mental health,2021,SSHRC (Partnership Development Grant)
+        31.1667049,36.941628,Jordan,"Pathways to education: an international study to understand the educational experiences of refugee
+        children with dis/abilities",Robert Williamson,Daniel Leitch (U of Wisconsin-Platteville); Frederic Bemak (George Mason); Susan Barber (SFU); Minami Masahiro (SFU); ,Inna Stepaniuk (SFU); Samson Nashon (UBC); Clinton Smith (U of Tennessee at Martin),refugee children with dis/abilities; inclusive education; refugee studies; refugee mental health,2021,SSHRC (Partnership Development Grant)
+        49.2767096,-122.917803,Canada,"Pathways to education: an international study to understand the educational experiences of refugee
+        children with dis/abilities",Robert Williamson,Daniel Leitch (U of Wisconsin-Platteville); Frederic Bemak (George Mason); Susan Barber (SFU); Minami Masahiro (SFU); ,Inna Stepaniuk (SFU); Samson Nashon (UBC); Clinton Smith (U of Tennessee at Martin),refugee children with dis/abilities; inclusive education; refugee studies; refugee mental health,2021,SSHRC (Partnership Development Grant)
+        45.403271,-71.889038,Sherbrooke,Integrating Critical/Media Literacies in Plurilingual and Pluricultural Teacher Education,Angel Lin,Sunny Lau (Bishop's); Dawn Wiseman (Bishop's); Sean Chorney (SFU); Wendy Chun (SFU); Steve Marshall (SFU); Arlene Spracklin (SFU); Maurice Cheng (Waikato); Saskia Van Viegen (York); ,,Media literacies; Plurilingual Education; Critical pedagogy; STEM literacies; Design-based research,2021,SSHRC (Partnership Development Grant)
+        52.4760892,-71.8258668,"QC, Canada",Integrating Critical/Media Literacies in Plurilingual and Pluricultural Teacher Education,Angel Lin,Sunny Lau (Bishop's); Dawn Wiseman (Bishop's); Sean Chorney (SFU); Wendy Chun (SFU); Steve Marshall (SFU); Arlene Spracklin (SFU); Maurice Cheng (Waikato); Saskia Van Viegen (York); ,,Media literacies; Plurilingual Education; Critical pedagogy; STEM literacies; Design-based research,2021,SSHRC (Partnership Development Grant)
+        49.1913033,-122.8491439,Surrey BC,Integrating Critical/Media Literacies in Plurilingual and Pluricultural Teacher Education,Angel Lin,Sunny Lau (Bishop's); Dawn Wiseman (Bishop's); Sean Chorney (SFU); Wendy Chun (SFU); Steve Marshall (SFU); Arlene Spracklin (SFU); Maurice Cheng (Waikato); Saskia Van Viegen (York); ,,Media literacies; Plurilingual Education; Critical pedagogy; STEM literacies; Design-based research,2021,SSHRC (Partnership Development Grant)
+        53.99983,-125.0032,Katzie Nation,"Learning to care for salmon, our communities and ourselves: Towards a
+        posthuman ecological action-research methodology",Cher Hill,,,"posthumanism,
+        ecological education, postcolonial
+        futures, posthuman
+        actionresearch,
+        relational ontologies, wholism, transdisciplinary knowledge,
+        transcorporeal
+        methodologies, caring for salmon, creek restoration",2021,SSHRC (Insight Development Grant)
+        49.2207623,-122.6901534,Pitt Meadows,"Learning to care for salmon, our communities and ourselves: Towards a
+        posthuman ecological action-research methodology",Cher Hill,,,"posthumanism,
+        ecological education, postcolonial
+        futures, posthuman
+        actionresearch,
+        relational ontologies, wholism, transdisciplinary knowledge,
+        transcorporeal
+        methodologies, caring for salmon, creek restoration",2021,SSHRC (Insight Development Grant)
+        49.1624262,-122.8834231,"Vancouver,BC,Canada","Literacy in the Age of Data: Contextoriented
+        Learning Design for Critical Data Literacy in Secondary Education",Engida Gebre,,,"Critical data literacy, Contextualizing learning, Learning design, Open data as educational resource, Youth data literacy, Personal data literacy, Designbased
+        research",2021,SSHRC (Insight Development Grant)
+        49.2433804,-122.9725459,Burnaby BC,"Beyond lipservice: Investigating teacher educators pursuit of inclusive
+        practice during COVID19",Kevin O'Neill ,Laura D'Amico (SFU); Robert Williamson (SFU); Marek Hatala (SFU),,"teacher education, remote teaching, inclusion, equity, case study",2021,SSHRC (Insight Development Grant)
+        49.1933033,-122.8461439,Surrey BC,"Beyond lipservice: Investigating teacher educators pursuit of inclusive
+        practice during COVID19",Kevin O'Neill ,Laura D'Amico (SFU); Robert Williamson (SFU); Marek Hatala (SFU),,"teacher education, remote teaching, inclusion, equity, case study",2021,SSHRC (Insight Development Grant)
+        53.99983,-125.0032,Nass River valley of northwestern BC,"Raising Nisga’a language, sovereignty, and land based education through traditional carving knowledge",Amy Parent,Wal'aks; ,Andrew Robinson; Shirley Morven; Sim’oogit (Chief) Duuḵ; Sim’oogit Niis Joohl; Sim’oogit Ts’waawit; Winslow Edwards; Quincy Wang (SFU),"Indigenous Study, Language education; Indigenous knowledge",2020,The New Frontiers in Research Fund ( NFRF) - Exploration
+        49.2433804,-122.9725459,"Burnaby, BC",The Play Literacy Innovative Program: A virtual play platform for learners,Angel Lin,Arlene Spracklin (SFU),,Virtual; Play; Literacy; Meaning making,2020,SSHRC (Partnership Engage Grant- COVID special initative)
+        49.23554,-123.18553,Metro Vancouver,Storied lives: An impact study of COVID-19 on seniors and their community support services,Ching-Chiu Lin,Quincy Wang (SFU),,Seniors; COVID-19; Community development; Arts based research; Digital storytelling; Community Art Education,2020,SSHRC (Partnership Engage Grant- COVID special initative)
+        49.25854,-123.18453,Metro Vancouver,Performing Mentorship: Investigating Mentorship in 4 Arts for Social Change Creative Spaces and Contexts,Lynn  Fels,,Nicole Armos (SFU); Callista Chasse (Lethbridge); Lisa Ndejuru (Concordia); Jennifer Spiegel (SFU); Shira Taylor (U of T),"mentorship, performance, arts for social change, youth arts facilitation,
+        arts based research, theory, mentorship as performance, reciprocity, sustainability",2019,SSHRC (Insight Development Grant)
+        43.6534817,-79.3839347,Toronto,Performing Mentorship: Investigating Mentorship in 4 Arts for Social Change Creative Spaces and Contexts,Lynn  Fels,,Nicole Armos (SFU); Callista Chasse (Lethbridge); Lisa Ndejuru (Concordia); Jennifer Spiegel (SFU); Shira Taylor (U of T),"mentorship, performance, arts for social change, youth arts facilitation,
+        arts based research, theory, mentorship as performance, reciprocity, sustainability",2019,SSHRC (Insight Development Grant)
+        49.1634262,-122.8844231,"Vancouver, BC, Canada", Mathematising social issues in Canadian secondary schools,Sean Chorney,,,"mathematics, social, critical pedagogy, mathematising, participatory action
+        research, discourse analysis, investigation, secondary school education,
+        engagement, critical thinking",2020,SSHRC (Insight Development Grant)
+        49.1604262,-122.8814231,"Vancouver, BC, Canada","Early Relationship Formation in CrossCultural
+        Counselling: Actions and
+        Processes",Krista Socholotiuk,Josse Domene (U Calgary),,"Therapeutic relationship, Crosscultural,
+        Process research, Counselling
+        research",2020,SSHRC (Insight Development Grant)
+        48.4283182,-123.3649533,Victoria BC Canada,"Underground Literacies: The Use of Private Academic Support Services by
+        International EAL Students",Joel Heng Hartse,Tim Anderson (Uvic); Sandra Zappa-Hollman (UBC),,"Underground Literacies: The Use of Private Academic Support Services by
+        International EAL Students",2020,SSHRC (Insight Development Grant)
+        49.2620724,-123.118952,Vancouver,"Underground Literacies: The Use of Private Academic Support Services by
+        International EAL Students",Joel Heng Hartse,Tim Anderson (Uvic); Sandra Zappa-Hollman (UBC),,"Underground Literacies: The Use of Private Academic Support Services by
+        International EAL Students",2020,SSHRC (Insight Development Grant)
+        49.2463804,-122.9755459,Burnaby BC,"Underground Literacies: The Use of Private Academic Support Services by
+        International EAL Students",Joel Heng Hartse,Tim Anderson (Uvic); Sandra Zappa-Hollman (UBC),,"Underground Literacies: The Use of Private Academic Support Services by
+        International EAL Students",2020,SSHRC (Insight Development Grant)
+        49.1953033,-122.8481439,Surrey BC,"Underground Literacies: The Use of Private Academic Support Services by
+        International EAL Students",Joel Heng Hartse,Tim Anderson (Uvic); Sandra Zappa-Hollman (UBC),,"Underground Literacies: The Use of Private Academic Support Services by
+        International EAL Students",2020,SSHRC (Insight Development Grant)
+        49.1804262,-122.9814231,British Columbia,Living Within Earth's Carrying Capacity: Towards an Education for Eco-Social Cultural Change,Field Feasibility and Acceptability Testing of Action Based Psychosocial Reconciliation Approach in a PostGenocide Rural Community in Rwanda,Mark Mattes (SFU),,Cultural change; Environment; Justice; Carrying Capacity; Education,2020,Knowledge Synthesis Grants: Living Within the Earth’s Carrying Capacity
+        54.7023545,-3.2765753,UK,Ensuring Full Literacy in a Multicultural and Digital World,Janet Werker (UBC),"Maureen Hoskyn (SFU), w other 20 Co-Is",Daniele Moore (SFU) w other 18 Collaborators,"literacy; reading; language learning; culture; technology; new media; behaviour; neuroimaging;
+        computational modeling; indigenous; immigrant; Canada's official languages",2020,SSHRC (Partnership Grant)
+        39.7837304,-100.445882,US,Ensuring Full Literacy in a Multicultural and Digital World,Janet Werker (UBC),"Maureen Hoskyn (SFU), w other 20 Co-Is",Daniele Moore (SFU) w other 18 Collaborators,"literacy; reading; language learning; culture; technology; new media; behaviour; neuroimaging;
+        computational modeling; indigenous; immigrant; Canada's official languages",2020,SSHRC (Partnership Grant)
+        61.0666922,-107.991707,Canada,Ensuring Full Literacy in a Multicultural and Digital World,Janet Werker (UBC),"Maureen Hoskyn (SFU), w other 20 Co-Is",Daniele Moore (SFU) w other 18 Collaborators,"literacy; reading; language learning; culture; technology; new media; behaviour; neuroimaging;
+        computational modeling; indigenous; immigrant; Canada's official languages",2020,SSHRC (Partnership Grant)
+        54.4422735,-124.2559585,Northern British Columbia,Pandemic experiences and impacts of COVID-19 on the mental health of Indigenous communities,Alanaise Goodwill,"Jeannie Morgan (Co-I, FHS, SFU)",,Indigenous; Mental Health; Substance Use; Gender; Health services and policy; Northern British Columbia,2020,CIHR: Operating Grant: Knowledge Synthesis: COVID-19 in Mental Health and Substance Use
+        49.1923033,-122.8501439,"Surrey, BC","Co-Designing Innovative Strategies in Developing Multilingual Students' STEM Literacies in Public
+        Schools",Angel Lin,"Bong-gi Sohn (SFU, post-doc)",,STEM literacies; Multilingual Education; Critical pedagogy; Design-based research,2019,SSHRC Partnership Engage Grant
+        55.5321257,-106.1412243,Saskatchewan,Connecting Career Development and Mental Health in Schools,Kris Magnusson,Krista Socholotiuk (SFU); Jose Domene (U of C),Simon Viviers (Laval); Peter Robertson (Edinburgh Napier U.),Career development; mental health; youth in schools; evidence-based practice;,2020,SSHRC (Partnership Development Grant)
+        46.2555734,-65.8421702,New Brunswick,Connecting Career Development and Mental Health in Schools,Kris Magnusson,Krista Socholotiuk (SFU); Jose Domene (U of C),Simon Viviers (Laval); Peter Robertson (Edinburgh Napier U.),Career development; mental health; youth in schools; evidence-based practice;,2020,SSHRC (Partnership Development Grant)
+        49.1913033,-122.8491439,Surrey,Connecting Career Development and Mental Health in Schools,Kris Magnusson,Krista Socholotiuk (SFU); Jose Domene (U of C),Simon Viviers (Laval); Peter Robertson (Edinburgh Napier U.),Career development; mental health; youth in schools; evidence-based practice;,2020,SSHRC (Partnership Development Grant)
+        49.9527193,-119.4424386,Central Okanagan,Connecting Career Development and Mental Health in Schools,Kris Magnusson,Krista Socholotiuk (SFU); Jose Domene (U of C),Simon Viviers (Laval); Peter Robertson (Edinburgh Napier U.),Career development; mental health; youth in schools; evidence-based practice;,2020,SSHRC (Partnership Development Grant)
+        49.2618661,-122.9555509,Metro Vancouver,Development of Executive Functions in Multilingual Children: A Follow-up Stud,Maureen Hoskyn,Danièle Moore (SFU),,Executive Functions; Multilingualism; development; Plurilingualism,2020,SSHRC (Insight Grant)
+        49.2618724,-123.114952,Vancouver BC,Developing Place and Nature-Based Experiential Education Practices in Public Schools and Teacher Education,Sean Blenkinsop,Mark Fettes (SFU); Cher Hill (SFU); Paula Rosehart (SFU),,Environmental; place-based; education; ethnography; community-based; eco-portraiture; teacher education,2020,SSHRC (Insight Grant)
+        49.2777096,-122.918803,SFU Burnaby ,Coaching Discovery Competencies with Context-Sensitive Questioning,John Nesbit,Philip Winne (SFU),Fred Popowich (SFU),"inquiry learning; discovery competency; simulation; questioning; pedagogical agent; scaffolding;
+        guidance; transfer; experiment; meta-analysis; microgenetic",2019,SSHRC (Insight Grant)
+        49.1649047,-123.8147457,Gabriola Island,Land-based learning for reconciliation on Gabriola Island,Mark Fettes,Sean Blenkinsop (SFU),April Vannini (Royal Roads U.),elementary education; community education; environmental education; indigenous education; land-based learning; curriculum development,2019,SSHRC (Partnership Development Grant)
+        -1.964663,30.064436,Rwanda,Field Feasibility and Acceptability Testing of Action Based Psychosocial Reconciliation Approach in a PostGenocide Rural Community in Rwanda,Masahiro Minami,,,"PostGenocide, Rwanda, PostGacaca, Rwanda, Psychosocial reconciliation, Contact theory, Japanese Morita therapy, Restorative justice approach, Forgiveness, Attitude change, Trauma repair/recovery, Feasibility and acceptability testing",2018,SSHRC (Insight Development Grant)</div>
+
+    <script src="scripts/datavis_main.js"></script>
+    <script>
+        $( function() {
+          var pi_availableTags = [];
+          var coPIs_availableTags = [];
+          var period_availableTags = [];
+          var site_availableTags = [];
+          var funder_availableTags = [];
+
+          for (var i = 0; i < parsedD.length; i++) {
+
+            var PIs = parsedD[i]["PI"]; //.substring(0, 50);
+            pi_availableTags.push(PIs);
+
+            var CoPIs = parsedD[i]["Co-PI(s)"];
+            coPIs_availableTags.push(CoPIs);
+
+            var period = parsedD[i]["Funding period"];
+            period_availableTags.push(period);
+
+            var site = parsedD[i]["Research Sites"];
+            site_availableTags.push(site);
+
+            var Funder = parsedD[i].Funder;
+            funder_availableTags.push(Funder);
+
+          }
+
+          pi_availableTags =  pi_availableTags.filter(function(item, i, pi_availableTags) {
+            return i == pi_availableTags.indexOf(item);
+          });
+
+          coPIs_availableTags =  coPIs_availableTags.filter(function(item, i, coPIs_availableTags) {
+            return i == coPIs_availableTags.indexOf(item);
+          });
+
+          period_availableTags =  period_availableTags.filter(function(item, i, period_availableTags) {
+            return i == period_availableTags.indexOf(item);
+          });
+        
+
+          site_availableTags =  site_availableTags.filter(function(item, i, site_availableTags) {
+            return i == site_availableTags.indexOf(item);
+          });
+
+          funder_availableTags =  funder_availableTags.filter(function(item, i, funder_availableTags) {
+            return i == funder_availableTags.indexOf(item);
+          });
+
+          // PI
+          $("#filters_norm #filter_pi_main").autocomplete({
+            source: pi_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[0].value, 
+                    inputBars[1].value, 
+                    ui.item.value, 
+                    inputBars[3].value, 
+                    inputBars[4].value, 
+                    inputBars[5].value, 
+                    inputBars[6].value, 
+                    inputBars[7].value);
+            }
+          });
+
+          $("#filters_norm #filter_pi_main").on('input', function(){
+            console.log($(this).val());
+          });
+
+          $("#filters_pc #filter_pi_main").autocomplete({
+            source: pi_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[8].value, 
+                    inputBars[9].value, 
+                    ui.item.value, 
+                    inputBars[11].value, 
+                    inputBars[12].value, 
+                    inputBars[13].value, 
+                    inputBars[14].value, 
+                    inputBars[15].value);
+                
+                console.log($(this).val());
+            }
+          });
+
+          $("#filters_pc #filter_pi_main").on('input', function(){
+            console.log($(this).val());
+          });
+
+          // CoPIs
+          $("#filters_norm #filter_pi_sub").autocomplete({
+            source: coPIs_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[0].value, 
+                    inputBars[1].value, 
+                    inputBars[2].value, 
+                    ui.item.value, 
+                    inputBars[4].value, 
+                    inputBars[5].value, 
+                    inputBars[6].value, 
+                    inputBars[7].value);
+                
+                console.log($(this).val());
+                console.log(inputBars);
+            }
+          });
+
+          $("#filters_norm #filter_pi_sub").on('input', function(){
+            console.log($(this).val());
+          });
+
+          $("#filters_pc #filter_pi_sub").autocomplete({
+            source: coPIs_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[8].value, 
+                    inputBars[9].value, 
+                    inputBars[10].value, 
+                    ui.item.value, 
+                    inputBars[12].value, 
+                    inputBars[13].value, 
+                    inputBars[14].value, 
+                    inputBars[15].value);
+            }
+          });
+
+          $("#filters_pc #filter_pi_sub").on('input', function(){
+            console.log($(this).val());
+          });
+
+          // Funding period 
+          $("#filters_norm #filter_fun_time").autocomplete({
+            source: period_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[0].value, 
+                    inputBars[1].value, 
+                    inputBars[2].value, 
+                    inputBars[3].value,
+                    inputBars[4].value, 
+                    inputBars[5].value, 
+                    ui.item.value, 
+                    inputBars[7].value);
+                
+                console.log($(this).val());
+                console.log(inputBars);
+            }
+          });
+
+          $("#filters_norm #filter_fun_time").on('input', function(){
+            console.log($(this).val());
+          });
+
+          $("#filters_pc #filter_fun_time").autocomplete({
+            source: period_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[8].value, 
+                    inputBars[9].value, 
+                    inputBars[10].value,
+                    inputBars[11].value,
+                    inputBars[12].value, 
+                    inputBars[13].value, 
+                    ui.item.value,
+                    inputBars[15].value);
+            }
+          });
+
+          $("#filters_pc #filter_fun_time").on('input', function(){
+            console.log($(this).val());
+          });
+
+          // Site
+          $("#filters_norm #filter_site").autocomplete({
+            source: site_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[0].value, 
+                    ui.item.value, 
+                    inputBars[2].value, 
+                    inputBars[3].value,
+                    inputBars[4].value, 
+                    inputBars[5].value,
+                    inputBars[6].value, 
+                    inputBars[7].value);
+                
+                console.log($(this).val());
+                console.log(inputBars);
+            }
+          });
+
+          $("#filters_norm #filter_site").on('input', function(){
+            console.log($(this).val());
+          });
+
+          $("#filters_pc #filter_site").autocomplete({
+            source: site_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[8].value, 
+                    ui.item.value, 
+                    inputBars[10].value,
+                    inputBars[11].value,
+                    inputBars[12].value, 
+                    inputBars[13].value, 
+                    inputBars[14].value,
+                    inputBars[15].value);
+            }
+          });
+
+          $("#filters_pc #filter_site").on('input', function(){
+            console.log($(this).val());
+          });
+
+          // Funder
+          $("#filters_norm #filter_fun_main").autocomplete({
+            source: funder_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[0].value,  
+                    inputBars[1].value,
+                    inputBars[2].value, 
+                    inputBars[3].value,
+                    inputBars[4].value, 
+                    ui.item.value,
+                    inputBars[6].value, 
+                    inputBars[7].value);
+                
+                console.log($(this).val());
+                console.log(inputBars);
+            }
+          });
+
+          $("#filters_norm #filter_fun_main").on('input', function(){
+            console.log($(this).val());
+          });
+
+          $("#filters_pc #filter_fun_main").autocomplete({
+            source: funder_availableTags,
+            select: function( event, ui ) {
+                filter(inputBars[8].value, 
+                    inputBars[9].value,
+                    inputBars[10].value,
+                    inputBars[11].value,
+                    inputBars[12].value, 
+                    ui.item.value,
+                    inputBars[14].value,
+                    inputBars[15].value);
+            }
+          });
+
+          $("#filters_pc #filter_fun_main").on('input', function(){
+            console.log($(this).val());
+          });
+
+          // Disapble dragging when filtering
+
+          $('#filters_norm').mousedown( function() {
+            map.dragging.disable();
+            map.touchZoom.disable();
+          });
+
+          $('#filters_pc').mousedown( function() {
+            map.dragging.disable();
+            map.touchZoom.disable();
+
+         });
+        
+         $('html').mouseup( function() {
+            map.dragging.enable();
+            map.touchZoom.enable();
+         });
+
+
+        } );
+        
+        </script>
+</body>
+
+</html>
