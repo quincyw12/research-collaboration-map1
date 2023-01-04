@@ -56,47 +56,6 @@
     <section class="main_view">
         <section class="Map_interface">
             <section class="map_container">
-
-                <div class="map_container" id="items_main">
-                    <div class="Filters_Pane" id="items_main2">
-                        <div class="f_header">
-                            <div class="main_header" style="text-align:center;">
-                                <name>Research Facility</name>
-                            </div>
-
-                            <section class="data_header" id="data_header">
-
-                                <header id="rname" style="font-size:large; text-align:center;">Storied lives: An impact study of COVID-19 on seniors and their community support services</header>
-                                <div id="pi_section" style="text-align:center;">
-                                    <div id="PI_field" style="padding:3px;">
-                                        <div class="research_details">Alf Coles (University of Bristol) and Kate Le Roux (University of Cape Town, SA)</div>
-                                    </div>
-                                    <div id="Co_PI_field" style="padding:3px;">
-                                        <div class="research_details">Nathalie Sinclair, Elizabeth de Freitas, Armando Solares, Oi-Lam Ng, Sally Wai-yan Wan, Tracy Hellwell, Julian Brown, Mark Boylan, Elaine Simmt, Stephanie La France</div>
-                                    </div>
-                                </div>
-
-                                <div id="collab_field" style="padding:3px;">
-                                    <div class="research_details">Sandy Banks (SFU)</div>
-                                </div>
-
-                                <div id="fund_section" style="text-align:center;">
-                                    <div id="funder_main" style="padding:2px; display:inline-block; width:43%;">
-                                        <div class="research_details">Funder</div>
-                                    </div>
-                                    <div id="funder_period" style="padding: 2px;display:inline-block; width: 43%;">
-                                        <div class="research_details">Period</div>
-                                    </div>
-                                </div>
-
-                                <div id="poi_keywords" style="padding: 3px; display: block;">
-                                    <div class="research_details">Keywords</div>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="map" id="map"></div>
             </section>
         </section>
@@ -105,15 +64,15 @@
             <div id="reg_sect" style="text-align:left; padding: 6px;">
                 <div id="section_reg" style="padding: 1px;">Region</div>
                 <div id="selectors" style="padding:8px;">
-                    <select name="rname" id="region_select">
-                        <option value="na">All</option>
-                        <option value="na">North America</option>
-                        <option value="sa">South America</option>
-                        <option value="eur">Europe</option>
-                        <option value="asia">Asia</option>
-                        <option value="me">Middle East</option>
-                        <option value="afr">Africa</option>
-                        <option value="oceania">Oceania</option>
+                    <select name="rname" id="region_select" onchange="adjustReg()">
+                        <option value="ALL">All</option>
+                        <option value="NA">North America</option>
+                        <option value="SA">South America</option>
+                        <option value="EUR">Europe</option>
+                        <option value="ASIA">Asia</option>
+                        <option value="ME">Middle East</option>
+                        <option value="AFR">Africa</option>
+                        <option value="OCEANIA">Oceania</option>
 
                     </select><input type="text" class="filter_input" id="filter_keywords" placeholder="Keywords" style="width: 93%; padding: 8px; text-align: left;" hidden />
                 </div>
