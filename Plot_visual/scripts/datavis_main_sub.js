@@ -222,37 +222,6 @@ function generateColours(maxList) {
 
 
 function init() {
-    for (var i = 0; i < inputBars.length; i++) {
-        console.log("aaa_>", i, inputBars[i].placeholder, "  ", inputBars[i].value);
-
-        inputBars[i].addEventListener('keypress', function (keyin) {
-
-            if (keyin.key == "Enter") {
-                // Inefficient code ahead!
-
-                for (var i = 0; i < inputBars.length; i++) {
-
-                    if (filtersPC.style.display != 'block') {
-                        if (i + 8 < inputBars.length) {
-                            inputBars[i + 8].value = inputBars[i].value ? inputBars[i].value.trim() : "";
-                        }
-                    }
-                    else {
-                        if (i - 8 >= 0) {
-                            inputBars[i - 8].value = inputBars[i].value ? inputBars[i].value.trim() : "";
-                        }
-                    }
-                }
-
-                //   console.log("DXXXX: ", inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
-                filter(inputBars[0].value, inputBars[1].value, inputBars[2].value, inputBars[3].value, inputBars[4].value, inputBars[5].value, inputBars[6].value, inputBars[7].value);
-                return this;
-            }
-        });
-
-
-
-    }
     colours = generateColours(parsedD.length);
     filter_v2("ALL", minM, maxM)
 
@@ -330,6 +299,39 @@ function GeoCode(query) {
     return coords;
 }
 
+function getRegion(name) {
+
+    /*
+     <option value="ALL">All</option>
+                        <option value="NA">North America</option>
+                        <option value="SA">South America</option>
+                        <option value="EUR">Europe</option>
+                        <option value="ASIA">Asia</option>
+                        <option value="ME">Middle East</option>
+                        <option value="AFR">Africa</option>
+                        <option value="OCEANIA">Oceania</option>
+     */
+    switch (name) {
+        case "North America":
+            return "NA"
+        case "South America":
+            return "SA"
+        case "Europe":
+            return "EUR"
+        case "Asia":
+            return "AISA"
+        case "Middle East":
+            return "ME"
+        case "Africa":
+            return "AFR"
+        case "Oceania":
+            return "OCEANIA"
+        default:
+            return "ALL"
+            break;
+    }
+}
+
 function filter_v2(RegionS, startY, endY) {
 
     // Clear the board.
@@ -345,33 +347,16 @@ function filter_v2(RegionS, startY, endY) {
 
     for (var i = 0; i < parsedD.length; i++) {
         var Project = parsedD[i]["Publication title"].substring(0, 100) ?? "";
-        var PIs = parsedD[i].Authors?.trim() ?? "";
-        var CoPIs = parsedD[i]["Co-author with"]?.trim() ?? ""
-        var site = ""
+        var PIs = parsedD[i]["Faculty of Education Author(s)"]?.trim() ?? "";
+        var CoPIs = parsedD[i]["Co-author(s)"]?.trim() ?? ""
+        var institution = parsedD[i].Institution.trim() ?? "";
         var coordsLat = parsedD[i].Latitude.trim() ?? "";
         var coordsLong = parsedD[i].Longitude.trim() ?? "";
         var References = parsedD[i].References.trim() ?? "";
-        var Region = "NA";
-
-
-        var locationExtr = GeoCode(parsedD[i].Location)
+        var Region = getRegion(parsedD[i].Region.trim()??"")
         var Year = parseInt(parsedD[i].Year.trim() ?? "");
 
-        var institution = parsedD[i].Place.trim() ?? "";
-
-        if (locationExtr != null)
-            if (institution == locationExtr.address.adminDistrict || institution == locationExtr.address.adminDistrict2 ||
-                institution == locationExtr.address.locality || institution == locationExtr.address.countryRegion) {
-
-                institution = ""
-            }
-            else {
-                site = locationExtr.address.adminDistrict2
-            }
-        else {
-            site = parsedD[i].Place.trim() ?? "";
-            institution = ""
-        }
+        
 
         console.log(Year, startY, endY, RegionS)
 
@@ -399,7 +384,6 @@ function filter_v2(RegionS, startY, endY) {
 				<div id="year">Year: ${Year}</div>
 				<div id="institution">Institution: ${institution}</div>
 				<div id="co-authors">Co-author with: ${CoPIs}</div>
-				<div id="place-interest">Place: ${site}</div>
 				<div id="references">References: ${References}</div>
 			</div>
 			`;
