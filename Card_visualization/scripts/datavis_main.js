@@ -83,7 +83,10 @@ if (USE_SERVER_DATA) {
 			if (txtFile.status === 200) {
 				var csvData = txtFile.responseText;
 
-				parsedD = $.csv.toObjects(csvData);
+				rawParsedD = $.csv.toObjects(csvData);
+
+				//parsedD = rawRarsedD.sort((a,b) => 0.5 - Math.random);
+				parsedD = shuffle(rawParsedD);
 
 				console.log("CSV Obtained successfully.");
 			} else {
@@ -114,6 +117,16 @@ function strToColour(str) {
 	return res;
 }
 
+function shuffle(array) {
+	for (let i = array.length - 1; i > 0; i--) {
+	  let j = Math.floor(Math.random() * (i + 1));
+	  let temp = array[i];
+	  array[i] = array[j];
+	  array[j] = temp;
+	}
+	return array;
+  }
+   
 function generateColours(maxList) {
 	var colours = [];
 	for (var i = 0; i < 3; i++) {
