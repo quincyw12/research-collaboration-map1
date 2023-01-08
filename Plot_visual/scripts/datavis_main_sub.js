@@ -319,7 +319,7 @@ function getRegion(name) {
         case "Europe":
             return "EUR"
         case "Asia":
-            return "AISA"
+            return "ASIA"
         case "Middle East":
             return "ME"
         case "Africa":
@@ -346,7 +346,7 @@ function filter_v2(RegionS, startY, endY) {
     console.log("-->", parsedD)
 
     for (var i = 0; i < parsedD.length; i++) {
-        var Project = parsedD[i]["Publication title"].substring(0, 100) ?? "";
+        var Project = parsedD[i]["Publication title"].substring(0, 127) ?? "";
         var PIs = parsedD[i]["Faculty of Education Author(s)"]?.trim() ?? "";
         var CoPIs = parsedD[i]["Co-author(s)"]?.trim() ?? ""
         var institution = parsedD[i].Institution.trim() ?? "";
@@ -358,9 +358,9 @@ function filter_v2(RegionS, startY, endY) {
 
         
 
-        console.log(Year, startY, endY, RegionS)
-
         if (Year >= startY && Year <= endY && (Region == RegionS || RegionS == "ALL")) {
+
+            console.log(Year, startY, endY, Region)
             // plot points here, same code as P1.
             var colourV = strToColour(Project);
 
