@@ -259,46 +259,6 @@ function loadDefault(element_id) {
     console.log("ERRO!")
 }
 
-var bingKey = "AvEQ1m7_88IHqh6gFAaKUTUuuqbz_zrvMU7HEEu_vX6qXguJOWIQk4WqS-01xSAq";
-function GeoCode(query) {
-    var geocoderURL = "https://dev.virtualearth.net/REST/v1/Locations/" + query + "?" + "o=json&key=" + bingKey;
-
-    var getLatLong = new XMLHttpRequest();
-    var coords = null
-
-    getLatLong.open("GET", geocoderURL, false);
-
-    getLatLong.onload = function (e) {
-        if (getLatLong.readyState == 4) {
-            if (getLatLong.status == 200) {
-                var data = JSON.parse(getLatLong.responseText);
-
-                if (data.authenticationResultCode == "ValidCredentials") {
-                    var points = data.resourceSets;
-
-                    if (points.length > 0) {
-                        if (points[0].resources.length > 0) {
-                            coords = points[0].resources[0]
-                        }
-                    }
-                }
-            }
-
-        }
-        else {
-            console.error(getLatLong.statusText);
-        }
-    }
-
-    getLatLong.onerror = function (e) {
-        console.error(getLatLong.statusText);
-    };
-
-    //getLatLong.send();
-
-    return coords;
-}
-
 function getRegion(name) {
 
     /*
@@ -332,11 +292,14 @@ function getRegion(name) {
     }
 }
 
-function filter_v2(RegionS, startY, endY) {
+function filter_v2(RegionS, startY, endY, YCHANGE = false) {
 
     // Clear the board.
     results.length = 0;
-    for (var x = 0; x < markers.length; x++) {
+    var avgLat = 0
+    var avgLong = 0
+    
+	for (var x = 0; x < markers.length; x++) {
         map.removeLayer(markers[x]);
     }
 
@@ -356,10 +319,11 @@ function filter_v2(RegionS, startY, endY) {
         var Region = getRegion(parsedD[i].Region.trim()??"")
         var Year = parseInt(parsedD[i].Year.trim() ?? "");
 
-        
-
         if (Year >= startY && Year <= endY && (Region == RegionS || RegionS == "ALL")) {
-
+			
+			avgLat += parseInt(coordsLat)
+			avgLong += parseInt(coordsLong)
+			
             console.log(Year, startY, endY, Region)
             // plot points here, same code as P1.
             var colourV = strToColour(Project);
@@ -395,6 +359,11 @@ function filter_v2(RegionS, startY, endY) {
             results.push(parsedD[count++]);
         }
     }
+	
+	avgLat /= results.length
+	avgLong /= results.length
+	
+	map.setView([avgLat, avgLong])
 }
 
 function changeTileType(tileURL) {
