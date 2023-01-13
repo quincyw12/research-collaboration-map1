@@ -343,17 +343,38 @@ function filter_v2(RegionS, startY, endY, YCHANGE = false) {
             const metadata2 =
                 `
 			<div class="popup_header" style="font-weight: 600;">
-				<div id="title">Publication title: ${Project}</div>
-				<div id="author">Authors: ${PIs}</div>
-				<div id="year">Year: ${Year}</div>
-				<div id="institution">Institution: ${institution}</div>
-				<div id="co-authors">Co-author with: ${CoPIs}</div>
+				<div id="title">Publication title:</div>
+				<div id="txt">${Project}</div>
+			    <div id="year">Year: ${Year}</div>
+				<div id="author">Author: ${CoPIs}</div>
+				<div id="institution">Author affiliation: ${institution}</div>
+				<div id="co-authors">Co-author with FoE author(s):</div>
+				<div id="txt2"> ${PIs}</div>
 				<div id="references">References: ${References}</div>
 			</div>
 			`;
-            markerT.bindTooltip(`${i + 1}`, { permanent: false, className: "my-label", offset: [0, 0] });
-            markerT.bindTooltip(metadata2, { className: 'tooltip' });
-
+            markerT.bindTooltip(metadata2, { className: 'tooltip' , permanent: false, functionDef: null, offset: [10,0]});
+			markerT.on("click", function (e) {
+				console.log("PState: ", e.sourceTarget._events.mouseout, e.sourceTarget.options.bcolor)
+				if (e.sourceTarget.options.functionDef == null)
+					e.sourceTarget.options.functionDef = e.sourceTarget._events.mouseout[0].fn
+					
+				if (e.sourceTarget.options.permanent != true) {
+					e.sourceTarget._events.mouseout[0].fn = null
+					e.sourceTarget.options.permanent = true;
+					e.sourceTarget._tooltip.options.permanent = true;
+					
+					document.getElementById(`label_${e.sourceTarget.options.id}`).style.border = "8px solid black";
+				}
+				else {
+					e.sourceTarget._events.mouseout[0].fn = e.sourceTarget.options.functionDef
+					e.sourceTarget.options.permanent = false;
+					e.sourceTarget._tooltip.options.permanent = false;
+					
+					document.getElementById(`label_${e.sourceTarget.options.id}`).style.border = "2px solid black";
+				}
+				
+			});
             markers.push(markerT);
 
             results.push(parsedD[count++]);
