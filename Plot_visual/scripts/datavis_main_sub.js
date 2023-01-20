@@ -350,9 +350,11 @@ function filter_v2(RegionS, startY, endY, YCHANGE = false) {
 				<div id="institution">Author affiliation: ${institution}</div>
 				<div id="co-authors">Co-author with FoE author(s):</div>
 				<div id="txt2"> ${PIs}</div>
-				<div id="references">References: ${References}</div>
+				
 			</div>
 			`;
+			
+			// <div id="references">Publication link: ${References}</div>
             markerT.bindTooltip(metadata2, { className: 'tooltip' , permanent: false, functionDef: null, offset: [10,0]});
 			markerT.on("click", function (e) {
 				console.log("PState: ", e.sourceTarget._events.mouseout, e.sourceTarget.options.bcolor)
