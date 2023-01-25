@@ -4,7 +4,8 @@
 const USE_SERVER_DATA = true;
 var Image_Shift = 453;
 //var homeCoords = [52.476089, -50.825867];
-var homeCoords = [52.476089, -87.276242];
+// var homeCoords = [52.476089, -87.276242];
+var homeCoords = [49.2787096,-60.918803];
 
 var txtFile = new XMLHttpRequest();
 var parsedD = {};
@@ -38,7 +39,7 @@ var defaultStyle = 'https://tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-
 var lightStyle = 'https://tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token=qYOU04zmJXYprHE89esvVcT3qGW68VsSgDdYXjXUUmZgDRBajbH3e58EHY5bONXU';
 var darkStyle = 'https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=qYOU04zmJXYprHE89esvVcT3qGW68VsSgDdYXjXUUmZgDRBajbH3e58EHY5bONXU';
 
-var minZoomV = 3;
+var minZoomV = 2;
 var maxZoomV = 18;
 
 var map = L.map('map', {
@@ -155,9 +156,9 @@ $(function () {
     $("#val_left").text(minM);
     $("#val_right").text(maxM);
     $("#slider-range").append(`<div class="my-handle ui-slider-handle" style="width: 13px; height: 13px; background: white url(./images/Selector_1.png) no-repeat scroll 50% 50%;
-    border-radius: 24px; border: 3px solid black;"></div>`);
+    border-radius: 24px; border: 1px solid black;"></div>`);
     $("#slider-range").append(`<div class="my-handle_2 ui-slider-handle" style="width: 13px; height: 13px;background: white url(./images/Selector_1.png) no-repeat scroll 50% 50%;
-    border-radius: 24px; border: 3px solid black;"></div>`);
+    border-radius: 24px; border: 1px solid black;"></div>`);
 
     $("#slider-range").slider({
         range: true,
@@ -292,6 +293,31 @@ function getRegion(name) {
     }
 }
 
+function fold(s, n, useSpaces, a) {
+    a = a || [];
+    if (s.length <= n) {
+        a.push(s);
+        return a;
+    }
+    var line = s.substring(0, n);
+    if (! useSpaces) { // insert newlines anywhere
+        a.push(line);
+        return fold(s.substring(n), n, useSpaces, a);
+    }
+    else { // attempt to insert newlines after whitespace
+        var lastSpaceRgx = /\s(?!.*\s)/;
+        var idx = line.search(lastSpaceRgx);
+        var nextIdx = n;
+        if (idx > 0) {
+            line = line.substring(0, idx);
+            nextIdx = idx;
+        }
+        a.push(line);
+        return fold(s.substring(nextIdx), n, useSpaces, a);
+    }
+}
+
+
 function filter_v2(RegionS, startY, endY, YCHANGE = false) {
 
     // Clear the board.
@@ -330,7 +356,7 @@ function filter_v2(RegionS, startY, endY, YCHANGE = false) {
 
             colourV = colourV % colours.length;
 
-            var labelTxt = L.divIcon({ className: 'my-div-icon', html: `<div id="label_${count}" style="text-align:center;color:white; opacity: 0.8; background-color: rgba(${colours[colourV][0]},${colours[colourV][1]},${colours[colourV][2]},0.4);width: 20px;height: 20px; border:2px solid black; border-radius: 30px; font-size: 14px;"></div>` });
+            var labelTxt = L.divIcon({ className: 'my-div-icon', html: `<div id="label_${count}" style="text-align:center;color:white; opacity: 0.8; background-color: rgba(${colours[colourV][0]},${colours[colourV][1]},${colours[colourV][2]},0.4);width: 10px;height: 10px; border:1px solid black; border-radius: 30px; font-size: 14px;"></div>` });
 
             const markerT = L.marker([coordsLat, coordsLong], {
                 icon: labelTxt, id: count
@@ -342,13 +368,13 @@ function filter_v2(RegionS, startY, endY, YCHANGE = false) {
 
             const metadata2 =
                 `
-			<div class="popup_header" style="font-weight: 600;">
-				<div id="title">Publication title:</div>
-				<div id="txt">${Project}</div>
-			    <div id="year">Year: ${Year}</div>
-				<div id="author">Author: ${CoPIs}</div>
-				<div id="institution">Author affiliation: ${institution}</div>
-				<div id="co-authors">Co-author with FoE author(s):</div>
+			<div class="popup_header" style="">
+				<div id="title"><b>Publication title:</b></div>
+				<div id="txt">${fold(Project,60, true).join('<br/>')}</div>
+			    <div id="year"><b>Year:</b> ${Year}</div>
+				<div id="author"><b>Author:</b> ${CoPIs}</div>
+				<div id="institution"><b>Author affiliation:</b> ${fold(institution,40,true).join('<br/>')}</div>
+				<div id="co-authors"><b>Co-author with FoE author(s):</b></div>
 				<div id="txt2"> ${PIs}</div>
 				
 			</div>
