@@ -525,7 +525,7 @@ function searchLocalDB(query) {
 		var CoPIs = parsedD[i].co_pi;
 		var Collabs = parsedD[i].collabs;
 		var Funder = parsedD[i].funder;
-		var TimePeriod = parsedD[i].fperiod;
+		var TimePeriod = parsedD[i].fperiod.toString();
 		var keywords = parsedD[i].keywords;
 		var site = parsedD[i].research_sites;
 		var coordsLat = parsedD[i].latitude;

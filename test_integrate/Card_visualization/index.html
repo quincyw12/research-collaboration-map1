@@ -290,19 +290,19 @@
 
           for (var i = 0; i < parsedD.length; i++) {
 
-            var PIs = parsedD[i]["PI"]; //.substring(0, 50);
+            var PIs = parsedD[i].pi; //.substring(0, 50);
             pi_availableTags.push(PIs);
 
-            var CoPIs = parsedD[i]["Co-PI(s)"];
+            var CoPIs = parsedD[i].co_pi;
             coPIs_availableTags.push(CoPIs);
 
-            var period = parsedD[i]["Funding period"];
+            var period = parsedD[i.fperiod.toString();
             period_availableTags.push(period);
 
-            var site = parsedD[i]["Research Sites"];
+            var site = parsedD[i].research_sites;
             site_availableTags.push(site);
 
-            var Funder = parsedD[i].Funder;
+            var Funder = parsedD[i].funder;
             funder_availableTags.push(Funder);
 
           }
