@@ -520,14 +520,14 @@ function zoomChange() {
 
 function searchLocalDB(query) {
 	for (var i = 0; i < parsedD.length; i++) {
-		var Project = parsedD[i].Project;
-		var PIs = parsedD[i].PI;
-		var CoPIs = parsedD[i]["Co-PI(s)"];
-		var Collabs = parsedD[i]["Collaborators(not funders)"];
-		var Funder = parsedD[i].Funder;
-		var TimePeriod = parsedD[i]["Funding period"];
-		var keywords = parsedD[i]["Research keywords"];
-		var site = parsedD[i]["Research Sites"];
+		var Project = parsedD[i].project;
+		var PIs = parsedD[i].pi;
+		var CoPIs = parsedD[i].co_pi;
+		var Collabs = parsedD[i].collabs;
+		var Funder = parsedD[i].funder;
+		var TimePeriod = parsedD[i].fperiod;
+		var keywords = parsedD[i].keywords;
+		var site = parsedD[i].research_sites;
 		var coordsLat = parsedD[i].latitude;
 		var coordsLong = parsedD[i].longitude;
 
