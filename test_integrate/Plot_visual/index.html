@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet"
+          href="stylesheets/styles.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+          integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+          crossorigin="" />
+
+    <link rel="stylesheet" href="stylesheets/additional_styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .ui-draggable, .ui-droppable {
+            background-position: top;
+        }
+        .ui-autocomplete {
+          max-height: 200px;
+          overflow-y: auto;
+          /* prevent horizontal scrollbar */
+          overflow: auto;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          margin-right:8px;
+          margin-bottom: 8px;
+          border-style: outset;
+        }
+        li.ui-menu-item {
+            overflow-wrap: normal;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+        /* IE 6 doesn't support max-height
+         * we use height instead, but this forces the menu to always be this tall
+         */
+        * html .ui-autocomplete {
+          height: 100px;
+        }
+    </style>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+            integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+            crossorigin=""></script>
+   
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.js" integrity="sha256-fNXJFIlca05BIO2Y5zh1xrShK3ME+/lYZ0j+ChxX2DA=" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <script src="scripts/jquery.csv.js"></script>
+
+</head>
+<body>
+    <section class="main_view">
+        <section class="Map_interface">
+            <section class="map_container">
+                <div class="map" id="map"></div>
+            </section>
+        </section>
+
+        <div class="Filters_Pane">
+            <div id="reg_sect" style="text-align:left; padding: 6px;">
+                <div id="section_reg" style="padding: 1px;">REGION</div>
+                <div id="selectors" style="padding:8px;">
+                    <select name="rname" id="region_select" onchange="adjustReg()">
+                        <option value="ALL">All</option>
+                        <option value="NA">North America</option>
+                        <option value="SA">South America</option>
+                        <option value="EUR">Europe</option>
+                        <option value="ASIA">Asia</option>
+                        <option value="ME">Middle East</option>
+                        <option value="AFR">Africa</option>
+                        <option value="OCEANIA">Oceania</option>
+
+                    </select><input type="text" class="filter_input" id="filter_keywords" placeholder="Keywords" style="width: 93%; padding: 8px; text-align: left;" hidden />
+                </div>
+                <div id="section_year" style="padding: 1px;">YEAR</div>
+                <div id="selector_slider" style="padding:8px;">
+                    <div id="slider" style="height: 20px;">
+                        <div id="val_left" class="sliderValue" data-index="0" value="10" style="float:left;">10</div>
+                        <div id="val_right" class="sliderValue" data-index="1" value="90" style="float:right;">90</div>
+                    </div>
+                    <div id="main_slider" style="padding:8px;"><div id="slider-range"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="scripts/datavis_main_sub.js"></script>
+</body>
+
+</html>

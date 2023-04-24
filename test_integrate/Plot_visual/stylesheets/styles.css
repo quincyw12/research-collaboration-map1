@@ -1,0 +1,246 @@
+/* width */
+::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+    display: none;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+nav {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: medium;
+    padding: 10px;
+}
+
+.data_header {
+    font-size: 12px;
+    overflow: scroll;
+    height: 83.5vh;
+    border-radius: 8px;
+}
+
+body {
+}
+
+.searchfeatures {
+    width: 100%;
+    border: 2px solid grey;
+    display: inline-block;
+}
+
+.search {
+    width: 99%;
+    display: block;
+    padding: 5px;
+}
+
+.options {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
+
+#logo {
+    width: 30px;
+    height: 30px;
+    padding-right: 9px;
+}
+
+.Filters_interface {
+    float: left;
+}
+
+.Map_interface {
+    float: right;
+    width: 100%;
+}
+
+.main_view {
+    display: inline-flex;
+    width: 100%;
+}
+
+.Filters_Pane {
+    font-family: Arial, Helvetica, sans-serif;
+    display: block;
+    background-color: white;
+    position: relative;
+    padding: 5px;
+    float: left;
+    z-index: 10000;
+    text-align: left;
+    padding: 3px;
+    font-size:11px;
+    font-weight:700;
+}
+
+#image_display {
+    overflow-x:scroll;
+    overflow-y:hidden;
+    display:inline-flex;
+    border: none;
+    top:-250px;
+    animation-name: none;
+    background-color:transparent;
+}
+
+.research_details__ {
+    border: 2px solid grey;
+    overflow: scroll;
+    padding: 5px;
+    text-align: center;
+    font-size: 15px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.rounded_button {
+    border: 2px solid grey;
+    padding: 5px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    height: 20px;
+    border-radius: 8px;
+}
+
+    .rounded_button:hover {
+        background-color: cyan;
+        color: white;
+    }
+
+.img_header {
+    text-align: left;
+    font-size: 14px;
+    display:block;
+    padding: 20px;
+}
+
+.text_content {
+    background-color:white;
+    width: 400px;
+    height: 250px;
+}
+
+#title_header {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#organization_bdy {
+    font-size: 14px;
+    font-weight: 300;
+}
+.f_header {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+#items_main {
+    display: none;
+    width: 60%;
+    top: 0px;
+    z-index: 10000;
+}
+
+#filters_pc {
+    display: none;
+    width: 90%;
+    top: -90px;
+    z-index: 10000;
+}
+
+@keyframes transin {
+    0% {
+        width: 0%
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes transin_mob {
+    0% {
+        height: 0%
+    }
+
+    100% {
+        height: 100%;
+    }
+}
+
+.Style-Options {
+    display: inline-block;
+}
+
+.image_button {
+    width: 10%;
+    height: 10%;
+    padding: 5px;
+    border-radius: 3px;
+    border: 2px solid grey;
+}
+
+
+.Settings_Pane {
+    width: 200px;
+    height: 80px;
+    xxdisplay: none;
+    background-color: transparent;
+    position: relative;
+    top: 0px;
+    right: 0px;
+    padding: 10px;
+    float: right;
+    z-index: 9000;
+    xxborder-radius: 3px;
+    border: 0px solid grey;
+}
+
+#homebtn {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    xxtop: -100px;
+    xxright: 10px;
+    padding: 10px;
+    float: right;
+    z-index: 10000;
+}
+
+#settingsbtn {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    xxtop: 0px;
+    xxright: 0px;
+    padding: 10px;
+    float: right;
+    z-index: 10000;
+}
+
+.map_container {
+    height: 100%;
+    width: 100%;
+}
+
+.map {
+    height: 90vh;
+    z-index: 0;
+}
